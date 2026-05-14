@@ -1,0 +1,1637 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Hunt AI · 한국 시장 진입 전략</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&family=Noto+Serif+KR:wght@300..900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    /* Modern Minimalist palette */
+    --paper:        #fafafa;     /* page background */
+    --surface:      #ffffff;     /* card background */
+    --surface-sunk: #f3f4f6;     /* recessed areas (table headers etc) */
+    --ink-900:      #1a1f2a;     /* near-black headlines */
+    --ink-700:      #36454f;     /* charcoal — primary text */
+    --ink-500:      #708090;     /* slate — secondary text */
+    --ink-300:      #c8ccd4;     /* dividers */
+    --ink-100:      #eef0f3;     /* hairlines */
+    --line:         #e3e6eb;     /* default border */
+    /* sparingly used accents */
+    --accent:       #b8523c;     /* terracotta — primary accent */
+    --accent-soft:  #f6e7e2;     /* terracotta wash */
+    --good:         #4a6b5d;     /* muted forest — positive */
+    --warn:         #b58419;     /* muted amber */
+    --serif:        'Source Serif 4', 'Noto Serif KR', Georgia, 'Times New Roman', serif;
+    --sans:         'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif;
+    --mono:         'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--paper);
+    color: var(--ink-700);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection { background: var(--ink-900); color: var(--paper); }
+  a { color: var(--ink-900); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  a:hover { color: var(--accent); }
+
+  /* ---------- Editorial scaffolding ---------- */
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 0 32px; }
+  .top-bar {
+    border-bottom: 1px solid var(--line);
+    padding: 16px 0;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--ink-500);
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .top-bar .brand { font-weight: 700; color: var(--ink-900); }
+  .top-bar .date { font-feature-settings: 'tnum' 1; }
+
+  /* ---------- Hero ---------- */
+  header.hero {
+    padding: 56px 0 64px;
+    border-bottom: 1px solid var(--ink-900);
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ink-500);
+    margin-bottom: 18px;
+  }
+  .eyebrow .dot { display: inline-block; width: 6px; height: 6px; background: var(--accent); border-radius: 50%; margin-right: 10px; vertical-align: middle; }
+  h1.display {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(36px, 5.2vw, 64px);
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    color: var(--ink-900);
+    margin: 0 0 22px;
+    max-width: 18ch;
+  }
+  h1.display em { font-style: italic; color: var(--accent); font-weight: 400; }
+  .lead {
+    font-size: 18px;
+    line-height: 1.55;
+    color: var(--ink-700);
+    max-width: 64ch;
+    margin: 0 0 36px;
+  }
+  .lead b { color: var(--ink-900); font-weight: 600; }
+
+  .kpi-strip {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    border-top: 1px solid var(--ink-100);
+    border-bottom: 1px solid var(--ink-100);
+  }
+  .kpi {
+    padding: 18px 24px 18px 0;
+    border-right: 1px solid var(--ink-100);
+  }
+  .kpi:last-child { border-right: none; padding-right: 0; }
+  .kpi .label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--ink-500);
+    margin-bottom: 8px;
+  }
+  .kpi .value {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 36px;
+    line-height: 1;
+    color: var(--ink-900);
+    letter-spacing: -0.02em;
+    font-feature-settings: 'tnum' 1;
+  }
+  .kpi .sub {
+    font-size: 12px;
+    color: var(--ink-500);
+    margin-top: 8px;
+  }
+
+  /* ---------- Navigation ---------- */
+  nav.tabs {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(250,250,250,0.94);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+    margin: 0 -32px;
+    padding: 0 32px;
+  }
+  nav.tabs .tab-inner {
+    display: flex; gap: 0; max-width: 1216px; margin: 0 auto;
+    overflow-x: auto;
+  }
+  nav.tabs button {
+    background: transparent; border: none;
+    padding: 18px 0; margin-right: 32px;
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-500);
+    letter-spacing: 0.2px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    white-space: nowrap;
+    transition: color 0.12s;
+  }
+  nav.tabs button:hover { color: var(--ink-900); }
+  nav.tabs button.active {
+    color: var(--ink-900);
+    border-bottom-color: var(--ink-900);
+    font-weight: 600;
+  }
+
+  /* ---------- Sections ---------- */
+  section.panel { display: none; padding: 56px 0; }
+  section.panel.active { display: block; }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  section.panel.active { animation: slideUp 0.25s ease-out; }
+
+  .section-head {
+    border-bottom: 1px solid var(--ink-900);
+    padding-bottom: 24px;
+    margin-bottom: 40px;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 48px;
+    align-items: end;
+  }
+  .section-head h2 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 40px;
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+    color: var(--ink-900);
+    margin: 8px 0 0;
+  }
+  .section-head .description {
+    font-size: 15px;
+    color: var(--ink-500);
+    margin: 0;
+    max-width: 56ch;
+  }
+
+  /* ---------- Cards & grids ---------- */
+  .grid { display: grid; gap: 24px; }
+  .grid.two { grid-template-columns: 1fr 1fr; }
+  .grid.three { grid-template-columns: repeat(3, 1fr); }
+  .grid.split-1-2 { grid-template-columns: 1fr 2fr; }
+
+  .panel-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    padding: 28px 32px;
+  }
+  .panel-card.flush { padding: 0; }
+  .panel-card h3 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 22px;
+    line-height: 1.2;
+    color: var(--ink-900);
+    margin: 0 0 16px;
+    letter-spacing: -0.01em;
+  }
+  .panel-card .card-eyebrow {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--ink-500);
+    margin-bottom: 4px;
+  }
+  .panel-card p { margin: 0 0 12px; color: var(--ink-700); }
+  .panel-card ol, .panel-card ul {
+    margin: 0; padding-left: 22px;
+    color: var(--ink-700);
+  }
+  .panel-card ol li, .panel-card ul li { margin-bottom: 8px; }
+  .panel-card ol li b, .panel-card ul li b { color: var(--ink-900); font-weight: 600; }
+
+  /* numbered editorial list */
+  .num-list { list-style: none; padding: 0; margin: 0; counter-reset: ed; }
+  .num-list li {
+    counter-increment: ed;
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--ink-100);
+  }
+  .num-list li:first-child { border-top: 1px solid var(--ink-100); }
+  .num-list li::before {
+    content: counter(ed, decimal-leading-zero);
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 24px;
+    color: var(--accent);
+    line-height: 1.2;
+  }
+  .num-list .ed-title { font-weight: 600; color: var(--ink-900); margin-bottom: 4px; }
+  .num-list .ed-body { color: var(--ink-500); font-size: 14px; }
+
+  /* ---------- Filters ---------- */
+  .filter-bar {
+    display: flex; flex-wrap: wrap; gap: 12px;
+    align-items: center;
+    margin-bottom: 24px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--ink-100);
+  }
+  .search {
+    position: relative;
+    flex: 0 0 280px;
+  }
+  .search input {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    padding: 10px 14px 10px 36px;
+    font-family: var(--sans);
+    font-size: 13px;
+    color: var(--ink-900);
+  }
+  .search input:focus { outline: none; border-color: var(--ink-900); }
+  .search::before {
+    content: '⌕';
+    position: absolute;
+    left: 12px; top: 50%; transform: translateY(-50%);
+    color: var(--ink-500);
+    font-size: 16px;
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--ink-500);
+    padding: 6px 12px;
+    font-family: var(--sans);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.12s;
+  }
+  .chip:hover { border-color: var(--ink-700); color: var(--ink-900); }
+  .chip.active { background: var(--ink-900); border-color: var(--ink-900); color: var(--paper); }
+
+  /* ---------- Table ---------- */
+  .table-wrap { overflow-x: auto; }
+  table.editorial {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+  table.editorial thead th {
+    text-align: left;
+    padding: 14px 16px;
+    color: var(--ink-500);
+    font-family: var(--mono);
+    font-weight: 500;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--ink-900);
+    background: var(--surface);
+  }
+  table.editorial tbody td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--ink-100);
+    vertical-align: top;
+    color: var(--ink-700);
+  }
+  table.editorial tbody tr:hover { background: var(--surface-sunk); }
+  table.editorial tbody td .name { color: var(--ink-900); font-weight: 600; font-family: var(--serif); font-size: 15px; }
+  table.editorial tbody td .tagline { color: var(--ink-500); font-size: 12px; margin-top: 4px; line-height: 1.5; }
+  table.editorial .row-num { color: var(--ink-500); font-family: var(--mono); font-size: 11px; font-feature-settings: 'tnum' 1; }
+
+  .pill {
+    display: inline-block;
+    padding: 2px 8px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--ink-700);
+    background: var(--surface-sunk);
+    border: 1px solid var(--ink-100);
+  }
+  .tier { font-family: var(--mono); font-size: 11px; letter-spacing: 1px; text-transform: uppercase; font-weight: 700; }
+  .tier-H { color: var(--good); }
+  .tier-M { color: var(--warn); }
+  .tier-L { color: var(--ink-500); }
+
+  /* ---------- Cluster cards ---------- */
+  .cluster-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--ink-100);
+    border-left: 1px solid var(--ink-100);
+  }
+  .cluster {
+    background: var(--surface);
+    padding: 28px 32px;
+    border-right: 1px solid var(--ink-100);
+    border-bottom: 1px solid var(--ink-100);
+    transition: background 0.15s;
+  }
+  .cluster:hover { background: var(--surface-sunk); }
+  .cluster .c-num {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 36px;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 12px;
+    font-weight: 400;
+  }
+  .cluster h3 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 22px;
+    line-height: 1.2;
+    color: var(--ink-900);
+    margin: 0 0 8px;
+    letter-spacing: -0.01em;
+  }
+  .cluster .c-count {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+  .cluster p {
+    font-size: 14px;
+    color: var(--ink-500);
+    margin: 0 0 16px;
+    line-height: 1.6;
+  }
+  .cluster .examples {
+    display: flex; flex-wrap: wrap; gap: 4px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--ink-100);
+  }
+  .cluster .examples span {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--ink-700);
+    background: transparent;
+    border: 1px solid var(--ink-100);
+    padding: 2px 8px;
+  }
+
+  /* ---------- Idea cards (editorial magazine style) ---------- */
+  .idea {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    margin-bottom: 24px;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    overflow: hidden;
+  }
+  .idea .left-rail {
+    border-right: 1px solid var(--line);
+    padding: 32px;
+    background: var(--surface-sunk);
+    display: flex; flex-direction: column;
+  }
+  .idea .left-rail .rank-num {
+    font-family: var(--serif);
+    font-size: 96px;
+    line-height: 0.85;
+    font-weight: 300;
+    color: var(--ink-900);
+    letter-spacing: -0.04em;
+    margin-bottom: 16px;
+  }
+  .idea .left-rail .rank-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: var(--ink-500);
+  }
+  .idea .left-rail .diff-block {
+    margin-top: auto;
+    padding-top: 24px;
+  }
+  .idea .left-rail .diff-block .lbl {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--ink-500);
+    margin-bottom: 8px;
+  }
+  .diff-bar { display: flex; gap: 3px; }
+  .diff-bar .dot { width: 16px; height: 4px; background: var(--ink-100); }
+  .diff-bar .dot.on { background: var(--ink-900); }
+
+  .idea .body {
+    padding: 32px 36px;
+  }
+  .idea .body .cat {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .idea .body h3 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 28px;
+    line-height: 1.15;
+    color: var(--ink-900);
+    margin: 0 0 12px;
+    letter-spacing: -0.015em;
+  }
+  .idea .body .one-liner {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 16px;
+    color: var(--ink-700);
+    line-height: 1.5;
+    margin: 0 0 24px;
+    max-width: 70ch;
+  }
+
+  .meta-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    margin: 24px 0;
+    border-top: 1px solid var(--ink-100);
+    border-bottom: 1px solid var(--ink-100);
+  }
+  .meta-cell {
+    padding: 14px 18px 14px 0;
+    border-right: 1px solid var(--ink-100);
+  }
+  .meta-cell:last-child { border-right: none; padding-right: 0; }
+  .meta-cell .k {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: var(--ink-500);
+    margin-bottom: 6px;
+  }
+  .meta-cell .v {
+    font-family: var(--sans);
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--ink-900);
+    line-height: 1.4;
+  }
+
+  .idea-section {
+    margin-top: 20px;
+  }
+  .idea-section h4 {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: var(--ink-500);
+    margin: 0 0 8px;
+    font-weight: 600;
+  }
+  .idea-section ul { padding-left: 18px; margin: 0; font-size: 14px; line-height: 1.65; }
+  .idea-section ul li { margin-bottom: 4px; color: var(--ink-700); }
+  .idea-section ul li b { color: var(--ink-900); font-weight: 600; }
+
+  .tech-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tech-tags span {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 4px 10px;
+    border: 1px solid var(--ink-100);
+    color: var(--ink-700);
+    background: var(--paper);
+  }
+
+  /* ---------- Strategy pillars ---------- */
+  .strat-block { margin-bottom: 36px; }
+  .strat-block-head {
+    display: flex; align-items: baseline; gap: 16px;
+    border-bottom: 1px solid var(--ink-300);
+    padding-bottom: 12px; margin-bottom: 20px;
+  }
+  .strat-block-head .lbl {
+    font-family: var(--mono);
+    font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--ink-500);
+  }
+  .strat-block-head h3 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 26px;
+    line-height: 1.2;
+    color: var(--ink-900);
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+  .pillar {
+    background: var(--surface);
+    border-left: 3px solid var(--ink-900);
+    padding: 18px 24px;
+    margin-bottom: 8px;
+  }
+  .pillar.accent { border-left-color: var(--accent); }
+  .pillar.warn { border-left-color: var(--warn); }
+  .pillar.muted { border-left-color: var(--ink-300); }
+  .pillar h4 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 17px;
+    color: var(--ink-900);
+    margin: 0 0 6px;
+  }
+  .pillar p {
+    margin: 0;
+    color: var(--ink-500);
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  .wedge {
+    background: var(--ink-900);
+    color: var(--paper);
+    padding: 40px 48px;
+    margin-top: 8px;
+  }
+  .wedge .lbl {
+    font-family: var(--mono);
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--accent-soft);
+    margin-bottom: 12px;
+  }
+  .wedge .formula {
+    font-family: var(--serif);
+    font-size: 28px;
+    line-height: 1.4;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+  .wedge .formula b { font-weight: 600; color: var(--paper); }
+  .wedge .formula .plus { color: var(--accent); font-style: italic; padding: 0 8px; font-weight: 400; }
+  .wedge .footnote {
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.15);
+  }
+
+  /* ---------- Charts ---------- */
+  .chart-wrap { position: relative; height: 340px; }
+  .chart-wrap.tall { height: 420px; }
+
+  /* ---------- Sources ---------- */
+  .src-cols {
+    column-count: 2;
+    column-gap: 48px;
+    margin-top: 8px;
+  }
+  .src-cols .src-group { break-inside: avoid; margin-bottom: 28px; }
+  .src-cols .src-group h4 {
+    font-family: var(--mono);
+    font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--ink-900);
+    margin: 0 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--ink-300);
+  }
+  .src-cols ul { list-style: none; padding: 0; margin: 0; }
+  .src-cols ul li { padding: 6px 0; font-size: 13px; line-height: 1.5; }
+  .src-cols ul li a { color: var(--ink-700); text-decoration: none; }
+  .src-cols ul li a:hover { color: var(--accent); text-decoration: underline; }
+
+  /* ---------- Footer ---------- */
+  footer.colophon {
+    border-top: 1px solid var(--ink-900);
+    margin-top: 80px;
+    padding: 40px 0 56px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--ink-500);
+    text-transform: uppercase;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 900px) {
+    .wrap { padding: 0 20px; }
+    nav.tabs { margin: 0 -20px; padding: 0 20px; }
+    h1.display { font-size: 36px; }
+    .kpi-strip { grid-template-columns: repeat(2, 1fr); }
+    .kpi { border-right: none; border-bottom: 1px solid var(--ink-100); padding: 14px 0; }
+    .section-head { grid-template-columns: 1fr; gap: 12px; }
+    .section-head h2 { font-size: 28px; }
+    .grid.two, .grid.three, .grid.split-1-2, .cluster-grid { grid-template-columns: 1fr; }
+    .idea { grid-template-columns: 1fr; }
+    .idea .left-rail { flex-direction: row; align-items: center; justify-content: space-between; padding: 20px 24px; }
+    .idea .left-rail .rank-num { font-size: 56px; margin-bottom: 0; }
+    .idea .left-rail .diff-block { padding-top: 0; margin-top: 0; }
+    .idea .body { padding: 24px; }
+    .meta-row { grid-template-columns: 1fr; }
+    .meta-cell { border-right: none; border-bottom: 1px solid var(--ink-100); padding: 12px 0; }
+    .meta-cell:last-child { border-bottom: none; }
+    .wedge { padding: 28px 24px; }
+    .wedge .formula { font-size: 20px; }
+    .src-cols { column-count: 1; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<div class="top-bar">
+  <span class="brand">PH × KR — 시장 분석 리포트 No. 01</span>
+  <span class="date">2026.05.14 · SEOUL</span>
+</div>
+
+<header class="hero">
+  <div class="eyebrow"><span class="dot"></span>Vol. 1 · Issue 01 · 분석 30일치 · AI / LLM</div>
+  <h1 class="display">Product Hunt 30일,<br/><em>한국 1인 개발자</em>의 다섯 갈래.</h1>
+  <p class="lead">
+    2026년 4월 14일부터 5월 14일까지 Product Hunt에 올라온 <b>AI/LLM 상위 55개 서비스</b>를 수집하고 해결하려는 문제를 8개 메타 클러스터로 압축했다. 글로벌 시장 규모와 한국 인커번트를 교차해, 풀스택 1인 개발자가 카카오·네이버·HWP·온프렘이라는 현지 제약을 무기로 바꿀 수 있는 <b>다섯 개의 미개척 영역</b>을 순위별로 제시한다.
+  </p>
+
+  <div class="kpi-strip">
+    <div class="kpi"><div class="label">Services</div><div class="value">55</div><div class="sub">AI/LLM 신규 런칭</div></div>
+    <div class="kpi"><div class="label">Clusters</div><div class="value">8</div><div class="sub">메타 문제 패턴</div></div>
+    <div class="kpi"><div class="label">Top Ideas</div><div class="value">5</div><div class="sub">한국 진입 추천</div></div>
+    <div class="kpi"><div class="label">Global TAM</div><div class="value">$130B+</div><div class="sub">관련 10개 카테고리 합산</div></div>
+    <div class="kpi"><div class="label">한국 AICC</div><div class="value">₩454B</div><div class="sub">2030년 전망 · CAGR 23.7%</div></div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <div class="tab-inner">
+    <button class="tab-btn active" data-tab="overview">개요</button>
+    <button class="tab-btn" data-tab="catalog">서비스 카탈로그</button>
+    <button class="tab-btn" data-tab="clusters">문제 클러스터</button>
+    <button class="tab-btn" data-tab="market">시장 규모</button>
+    <button class="tab-btn" data-tab="top5">Top 5 아이디어</button>
+    <button class="tab-btn" data-tab="reddit">Reddit 시그널</button>
+    <button class="tab-btn" data-tab="strategy">한국 진입 전략</button>
+    <button class="tab-btn" data-tab="sources">출처</button>
+  </div>
+</nav>
+
+<!-- =================== OVERVIEW =================== -->
+<section class="panel active" id="overview">
+  <div class="section-head">
+    <h2>분석 개요</h2>
+    <p class="description">지난 30일간 Product Hunt AI/LLM 런칭의 큰 그림. 그리고 한국 1인 개발자에게 이것이 의미하는 바.</p>
+  </div>
+
+  <div class="grid two">
+    <div class="panel-card">
+      <div class="card-eyebrow">Section 01 · Trends</div>
+      <h3>이번 30일을 정의한 7가지 흐름</h3>
+      <ol class="num-list">
+        <li><div><div class="ed-title">에이전트 오케스트레이션이 1순위</div><div class="ed-body">Superset, Mngr, Baton, Logic, Mindra 등 14개 서비스. "여러 에이전트를 직원처럼 운영" 컨셉.</div></div></li>
+        <li><div><div class="ed-title">음성이 1급 인터페이스로 부상</div><div class="ed-body">SpeakON, Wispr Flow, Claude Code Voice Mode 등이 잇따라 일간 #1.</div></div></li>
+        <li><div><div class="ed-title">AI 코딩 도구의 메타화</div><div class="ed-body">Claude Code/Codex 위에 얹는 도구 폭증 — AgentPeek, Baton, Lovable Desktop.</div></div></li>
+        <li><div><div class="ed-title">"진짜 소스" 콘텐츠 우세</div><div class="ed-body">Brila(구글맵 리뷰 → 웹사이트), ProdShort(회의 → 포스트)가 환각 콘텐츠를 이김.</div></div></li>
+        <li><div><div class="ed-title">에이전트 인프라 계층 형성</div><div class="ed-body">Monid(결제), Huddle01 VMs(컴퓨트), Mintlify(지식), PandaProbe(관측).</div></div></li>
+        <li><div><div class="ed-title">오픈소스 프론티어 모델 부활</div><div class="ed-body">DeepSeek-V4(1M 컨텍스트), Kimi K2.6이 GPT-5 / Claude Opus와 견줌.</div></div></li>
+        <li><div><div class="ed-title">버티컬 에이전트 등장</div><div class="ed-body">OpenJobs AI(채용), Frontdesk AI(고객지원), KREV(이커머스).</div></div></li>
+      </ol>
+    </div>
+    <div class="panel-card">
+      <div class="card-eyebrow">Section 02 · Whitespace</div>
+      <h3>한국 시장의 다섯 가지 흰 영역</h3>
+      <p style="color: var(--ink-500); font-size: 14px;">글로벌 트렌드와 한국 시장 갭의 교차점에서 1인 풀스택 개발자에게 의미 있는 기회 영역:</p>
+      <ol class="num-list">
+        <li><div><div class="ed-title">한국어 음성 / 딕테이션</div><div class="ed-body">SpeakON 패턴의 한국화 — 사투리·존댓말 학습 도구가 부재.</div></div></li>
+        <li><div><div class="ed-title">한국어 버티컬 에이전트</div><div class="ed-body">채용·고객지원·이커머스 크리에이티브가 거의 미개척.</div></div></li>
+        <li><div><div class="ed-title">"진짜 소스" 한국판</div><div class="ed-body">네이버 지도 / 카카오톡 / 쿠팡 리뷰 기반 콘텐츠 자동 생성.</div></div></li>
+        <li><div><div class="ed-title">HWP-Native RAG</div><div class="ed-body">글로벌 도구가 HWP를 못 다룸. 세무사·법무사·의료 SMB 무주공산.</div></div></li>
+        <li><div><div class="ed-title">카카오톡 채널 SMB 챗봇</div><div class="ed-body">Channel Talk는 미드마켓만. 소상공인 가격대(3-8만원/월)는 비어있음.</div></div></li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="panel-card" style="margin-top:24px">
+    <div class="card-eyebrow">Section 03 · Methodology</div>
+    <h3>방법론</h3>
+    <ol style="counter-reset:step; list-style:none; padding:0; margin:0;">
+      <li style="display:grid; grid-template-columns:32px 1fr; gap:16px; padding:10px 0; border-bottom:1px solid var(--ink-100);"><span style="font-family:var(--mono); font-size:12px; color:var(--accent); padding-top:2px;">01</span><span>Product Hunt 일간/주간/월간 리더보드(2026.04.14–05.14) 스캔 — AI/LLM 카테고리 중심</span></li>
+      <li style="display:grid; grid-template-columns:32px 1fr; gap:16px; padding:10px 0; border-bottom:1px solid var(--ink-100);"><span style="font-family:var(--mono); font-size:12px; color:var(--accent); padding-top:2px;">02</span><span>각 서비스의 태그라인 → 해결 문제 매핑 → 8개 메타 클러스터로 분류</span></li>
+      <li style="display:grid; grid-template-columns:32px 1fr; gap:16px; padding:10px 0; border-bottom:1px solid var(--ink-100);"><span style="font-family:var(--mono); font-size:12px; color:var(--accent); padding-top:2px;">03</span><span>각 클러스터의 글로벌·APAC·한국 시장 규모를 Statista / Fortune / Mordor / Precedence 데이터로 교차 검증</span></li>
+      <li style="display:grid; grid-template-columns:32px 1fr; gap:16px; padding:10px 0; border-bottom:1px solid var(--ink-100);"><span style="font-family:var(--mono); font-size:12px; color:var(--accent); padding-top:2px;">04</span><span>한국 기존 플레이어(Wrtn, Allganize, Channel Talk, Daglo, Naver, Kakao) 포지셔닝 분석 후 갭 도출</span></li>
+      <li style="display:grid; grid-template-columns:32px 1fr; gap:16px; padding:10px 0;"><span style="font-family:var(--mono); font-size:12px; color:var(--accent); padding-top:2px;">05</span><span>1인 풀스택 개발자(Next.js + Python + AI API) 기준 빌드 난이도 · MVP 기간 추정</span></li>
+    </ol>
+  </div>
+</section>
+
+<!-- =================== SERVICE CATALOG =================== -->
+<section class="panel" id="catalog">
+  <div class="section-head">
+    <h2>서비스 카탈로그</h2>
+    <p class="description">Product Hunt에서 지난 30일 사이 런칭된 AI/LLM 서비스 55개의 전체 목록. 검색과 카테고리 필터로 탐색하세요.</p>
+  </div>
+
+  <div class="filter-bar">
+    <div class="search"><input type="text" id="searchInput" placeholder="서비스명 또는 문제로 검색…"></div>
+    <div class="chips" id="categoryFilters"></div>
+  </div>
+
+  <div class="panel-card flush">
+    <div class="table-wrap">
+      <table class="editorial" id="catalogTable">
+        <thead>
+          <tr>
+            <th style="width:40px">#</th>
+            <th>서비스</th>
+            <th>해결 문제</th>
+            <th>카테고리</th>
+            <th style="width:90px">인기도</th>
+            <th>핵심 기술</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel-card" style="margin-top:24px">
+    <div class="card-eyebrow">Distribution</div>
+    <h3>카테고리별 분포</h3>
+    <div class="chart-wrap"><canvas id="catalogChart"></canvas></div>
+  </div>
+</section>
+
+<!-- =================== CLUSTERS =================== -->
+<section class="panel" id="clusters">
+  <div class="section-head">
+    <h2>여덟 개의 메타 패턴</h2>
+    <p class="description">55개 서비스가 풀려는 문제를 추상화하면 8개 패턴으로 수렴된다. 각 패턴은 향후 1–3년의 카테고리 윤곽을 보여준다.</p>
+  </div>
+
+  <div class="cluster-grid" id="clusterGrid"></div>
+
+  <div class="panel-card" style="margin-top:32px">
+    <div class="card-eyebrow">Distribution</div>
+    <h3>클러스터별 서비스 비중</h3>
+    <div class="chart-wrap tall"><canvas id="clusterChart"></canvas></div>
+  </div>
+</section>
+
+<!-- =================== MARKET SIZE =================== -->
+<section class="panel" id="market">
+  <div class="section-head">
+    <h2>시장 규모 · 글로벌 vs 한국</h2>
+    <p class="description">각 클러스터가 속한 산업의 2026년 시장 규모와 CAGR, 한국·APAC 비중. 한국 데이터가 없는 경우 APAC 비율(약 22%)로 추정.</p>
+  </div>
+
+  <div class="grid two">
+    <div class="panel-card">
+      <div class="card-eyebrow">Chart 01</div>
+      <h3>글로벌 시장 규모 (2026, USD)</h3>
+      <div class="chart-wrap"><canvas id="globalMarketChart"></canvas></div>
+    </div>
+    <div class="panel-card">
+      <div class="card-eyebrow">Chart 02</div>
+      <h3>CAGR · 5년 성장률</h3>
+      <div class="chart-wrap"><canvas id="cagrChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="panel-card" style="margin-top:24px">
+    <div class="card-eyebrow">Chart 03</div>
+    <h3>한국 vs 글로벌 · 카테고리별</h3>
+    <div class="chart-wrap tall"><canvas id="koreaMarketChart"></canvas></div>
+    <div style="color: var(--ink-500); font-size: 12px; margin-top: 12px; font-style: italic;">* 한국 단독 데이터가 없는 경우 APAC 비율(약 22%)로 추정. 한국 AICC(₩454B by 2030)만 확정치.</div>
+  </div>
+
+  <div class="panel-card" style="margin-top:24px">
+    <div class="card-eyebrow">Mapping</div>
+    <h3>한국 인커번트 포지셔닝 및 SMB / 1인 개발자 갭</h3>
+    <div class="table-wrap">
+      <table class="editorial">
+        <thead><tr><th>카테고리</th><th>한국 주요 플레이어</th><th>포지셔닝</th><th>SMB / 1인 개발자 갭</th></tr></thead>
+        <tbody id="incumbentTable"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- =================== TOP 5 IDEAS =================== -->
+<section class="panel" id="top5">
+  <div class="section-head">
+    <h2>Top 5 · 미개척 아이디어</h2>
+    <p class="description">빌드 난이도 · 한국 시장 갭 · 결제 의향 · 차별화 가능성 · 한국 정합성을 종합한 순위. 풀스택 1인 개발자 기준.</p>
+  </div>
+
+  <div id="ideaCards"></div>
+
+  <div class="panel-card" style="margin-top:32px">
+    <div class="card-eyebrow">Comparative Matrix</div>
+    <h3>다섯 아이디어 비교 매트릭스</h3>
+    <div class="chart-wrap tall"><canvas id="ideaMatrixChart"></canvas></div>
+    <div style="color: var(--ink-500); font-size: 12px; margin-top: 12px; font-style: italic;">* 각 축 1–5점 척도. '빌드 용이도'는 높을수록 1인 개발자에 유리.</div>
+  </div>
+</section>
+
+<!-- =================== REDDIT SIGNAL =================== -->
+<section class="panel" id="reddit">
+  <div class="section-head">
+    <h2>Reddit 시그널 · 시장이 못 풀고 있는 문제</h2>
+    <p class="description">1인 AI 개발자 · SaaS 빌더 커뮤니티 5곳에서 가장 추천받은 게시물을 추적해 사람들이 반복적으로 호소하는 미해결 페인포인트를 추출.</p>
+  </div>
+
+  <div class="panel-card" style="background: var(--ink-900); color: var(--paper); border: none;">
+    <div class="card-eyebrow" style="color: rgba(255,255,255,0.55);">중요 캐비잇</div>
+    <h3 style="color: var(--paper); font-family: var(--serif); font-weight: 500;">한국 SMB 고객은 Reddit에 없다</h3>
+    <p style="color: rgba(255,255,255,0.75); font-size: 15px; margin: 0;">아래 데이터는 <b style="color: var(--paper);">엔지니어링 및 비즈니스 모델 상태</b>를 학습하는 용도다. 한국 클리닉·식당·세무사·셀러는 Disquiet · OKKY · Naver Cafe · KakaoTalk 오픈채팅에서 모인다. 한국형 디스트리뷰션 검증은 이들 채널을 통해야 한다.</p>
+  </div>
+
+  <div class="section-head" style="margin-top: 48px;">
+    <h2 style="font-size: 28px;">5 Communities</h2>
+    <p class="description">대상 메타 주제 신호가 가장 강한 서브레딧 5곳. r/koreatech 등 한국 특화는 활성도 낮아 제외.</p>
+  </div>
+
+  <div class="cluster-grid" id="redditGrid"></div>
+
+  <div class="section-head" style="margin-top: 56px;">
+    <h2 style="font-size: 28px;">Top Posts</h2>
+    <p class="description">각 커뮤니티에서 우리 주제와 직결된 상위 추천 게시물.</p>
+  </div>
+
+  <div class="panel-card flush">
+    <div class="table-wrap">
+      <table class="editorial">
+        <thead><tr><th style="width:40px">#</th><th>서브레딧</th><th>게시물 제목</th><th>핵심 문제</th><th style="width:90px">추천</th></tr></thead>
+        <tbody id="redditPostsTable"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-head" style="margin-top: 56px;">
+    <h2 style="font-size: 28px;">8 Unsolved Problems</h2>
+    <p class="description">상위 게시물을 가로질러 반복 등장하는 미해결 페인포인트. "이걸 푸는 도구는 아직 없다"는 합의가 형성된 영역.</p>
+  </div>
+
+  <div id="problemsList"></div>
+
+  <div class="section-head" style="margin-top: 56px;">
+    <h2 style="font-size: 28px;">Top 5 아이디어 × Reddit 페인포인트 매핑</h2>
+    <p class="description">우리 5개 아이디어와 Reddit 커뮤니티에서 검증된 페인포인트의 정합성. 어떤 문제를 우리가 푸는지 한 눈에.</p>
+  </div>
+
+  <div class="panel-card flush">
+    <div class="table-wrap">
+      <table class="editorial">
+        <thead><tr><th style="width:32px">#</th><th>아이디어</th><th>매핑된 미해결 문제</th><th>리스크 / 시사점</th></tr></thead>
+        <tbody id="mappingTable"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- =================== STRATEGY =================== -->
+<section class="panel" id="strategy">
+  <div class="section-head">
+    <h2>한국 진입 전략 프레임워크</h2>
+    <p class="description">5개 축으로 정리한 한국 시장 특성. 모든 아이디어에 공통 적용되는 체크리스트.</p>
+  </div>
+
+  <div class="strat-block">
+    <div class="strat-block-head"><span class="lbl">Pillar 01</span><h3>규제 환경 · 2026년 시행</h3></div>
+    <div class="pillar"><h4>AI 기본법 (2026.1.22 시행)</h4><p>아시아 최초 종합 AI 법. 생성 AI 출력 라벨링 의무화. 고영향 AI(의료/에너지/공공)는 추가 의무. 1인 개발자도 컴플라이언스를 1일차부터 빌드해야 함.</p></div>
+    <div class="pillar"><h4>PIPA · 개인정보보호법</h4><p>"정당한 이익" 조항이 공개 데이터의 AI 학습 사용을 명시적으로 허용 (PIPC 2025 가이드라인). 단, 외국법인은 한국 국내대리인 지정 의무 (2025.4+). 국내법인 등록이 매출 채널 확보에 유리.</p></div>
+    <div class="pillar"><h4>데이터 주권 · Data Residency</h4><p>금융·헬스케어·공공은 국내 데이터 거주 요구. Naver Cloud · KT Cloud가 인증 백엔드 디폴트. AWS 단독 운영 시 엔터프라이즈 매출 제한.</p></div>
+  </div>
+
+  <div class="strat-block">
+    <div class="strat-block-head"><span class="lbl">Pillar 02</span><h3>플랫폼 중력 · 무시할 수 없는 인프라</h3></div>
+    <div class="pillar"><h4>카카오톡 (48M+ DAU)</h4><p>한국 소비자 / SMB 제품은 카카오톡 친구톡 · 알림톡 · 채널 메시지 통합이 사실상 필수. 카카오 비즈메시지 API 연동이 1차 차별화.</p></div>
+    <div class="pillar"><h4>네이버 검색 + Smart Store</h4><p>Google SEO와 알고리즘이 완전히 다름. C-Rank, D.I.A., 키워드 + 클릭률 가중치. 네이버 SEO 도구는 글로벌 SaaS가 절대 못 만드는 영역.</p></div>
+    <div class="pillar"><h4>결제 인프라</h4><p>Toss · Naver Pay · KakaoPay · KCP · INICIS가 지배. Stripe는 많은 한국 구매자에게 불가능. PG 등록 필수. 부가세 별도 표기 + 세금계산서 발행이 B2B의 기본기.</p></div>
+  </div>
+
+  <div class="strat-block">
+    <div class="strat-block-head"><span class="lbl">Pillar 03</span><h3>한국 LLM 생태계 (2026)</h3></div>
+    <div class="pillar"><h4>Naver HyperCLOVA X</h4><p>가장 폴리시드된 국산 LLM. CLOVA Studio API 제공. 정부 sovereign AI 프로젝트 참여.</p></div>
+    <div class="pillar"><h4>Kakao Kanana — 2026 H1</h4><p>카카오톡에 에이전트 임베드. 파트너 API 출시 예정. 1인 개발자가 카카오톡 채널을 통한 에이전트 배포 가능성 주목.</p></div>
+    <div class="pillar"><h4>LG Exaone 4.0 · 산업 특화</h4><p>하이브리드 추론. 바이오·제조·소재 데이터 특화. 컨슈머향은 아님. B2B 매니지드 서비스 기회.</p></div>
+    <div class="pillar"><h4>Wrtn — $100M ARR 트레젝토리</h4><p>한국발 컨슈머 GenAI가 가능함을 증명. US · 일본으로 확장 중 → 한국 호리즌탈은 비어가는 중.</p></div>
+    <div class="pillar"><h4>Allganize · 300+ 엔터프라이즈</h4><p>B2B AI가 한국에서 수익화됨을 증명. F500 타겟 → SMB 가격대(5–30만원/월)는 무주공산.</p></div>
+  </div>
+
+  <div class="strat-block">
+    <div class="strat-block-head"><span class="lbl">Pillar 04</span><h3>비즈니스 컬처 체크리스트</h3></div>
+    <div class="pillar"><h4>레퍼런스 컴토커 우선주의</h4><p>B2B는 네임드 레퍼런스가 디스프로포셔너블 중요. 첫 1–2 로고를 위해 PoC 무료/할인 정책 필요. AI EXPO KOREA · Naver DEVIEW 컨퍼런스 서킷 참여.</p></div>
+    <div class="pillar"><h4>한국어 고객 지원</h4><p>B2B / B2C 모두 빠른 한국어 응답 기대. 영어 단독 지원은 시작도 못 함. 카카오 채널톡 운영 권장.</p></div>
+    <div class="pillar"><h4>문서 포맷 · HWP / HWPX</h4><p>정부 · 교육 · 법무 영역에서 광범위 사용. 글로벌 도구가 못 다루는 핵심 차별화 포인트.</p></div>
+    <div class="pillar"><h4>존댓말 · 호칭 레벨</h4><p>고객 대응 AI는 존댓말 필수. 호칭 레벨 오류는 핵심 이탈 사유. 출력에 honorific level fine-tuning 필요.</p></div>
+  </div>
+
+  <div class="strat-block">
+    <div class="strat-block-head"><span class="lbl">Pillar 05</span><h3>1인 개발자가 이기는 포지셔닝</h3></div>
+    <div class="pillar accent"><h4>1티어 · 가장 강한 갭</h4><p>한국어 코딩 / dev 도구(온프렘 옵션) · HWP-네이티브 RAG · 카카오톡 우선 SMB 챗봇 · 의료 / 식당 / 법률 버티컬 보이스 에이전트 · 네이버 SEO 콘텐츠 도구</p></div>
+    <div class="pillar warn"><h4>2티어 · 가능하지만 경쟁</h4><p>회의 전사(Daglo / Clova 강세지만 버티컬 · 규제 영역 가능) · 쿠팡 / 스마트스토어 셀러 마케팅 자동화 · 한국어 text-to-SQL</p></div>
+    <div class="pillar muted"><h4>3티어 · 1인은 피해야</h4><p>호리즌탈 에이전트 (Naver / Kakao 영역) · 일반 콘텐츠 생성 (Wrtn + 글로벌 도구 우위) · 파운데이션 모델</p></div>
+  </div>
+
+  <div class="wedge">
+    <div class="lbl">The Wedge · 한국 시장 진입 공식</div>
+    <div class="formula">
+      <b>규제 버티컬</b><span class="plus">×</span><b>카카오 / 네이버 통합</b><span class="plus">×</span><b>한국어 우선 UX</b><span class="plus">×</span><b>온프렘 옵션</b><span class="plus">×</span><b>PIPA / AI법 컴플라이언스</b>
+    </div>
+    <div class="footnote">각 제약이 글로벌 도구와 한국 플랫폼 인커번트 모두에 대한 해자가 됨.</div>
+  </div>
+</section>
+
+<!-- =================== SOURCES =================== -->
+<section class="panel" id="sources">
+  <div class="section-head">
+    <h2>출처 및 참고 자료</h2>
+    <p class="description">데이터의 신뢰성을 위해 사용한 1차 자료. Product Hunt 리스트는 WebSearch 결과 스니펫 기반. 모든 제품은 실제 런칭. 시장 규모는 5개 이상 리서치 기관 교차 검증.</p>
+  </div>
+
+  <div class="src-cols">
+    <div class="src-group">
+      <h4>Product Hunt</h4>
+      <ul>
+        <li><a href="https://www.producthunt.com/leaderboard/monthly/2026/5" target="_blank">월간 Top — 2026년 5월</a></li>
+        <li><a href="https://www.producthunt.com/leaderboard/monthly/2026/4" target="_blank">월간 Top — 2026년 4월</a></li>
+        <li><a href="https://www.producthunt.com/leaderboard/weekly/2026/15/all" target="_blank">주간 Top — 4월 둘째 주</a></li>
+        <li><a href="https://www.producthunt.com/leaderboard/weekly/2026/20" target="_blank">주간 Top — 5월 둘째 주</a></li>
+        <li><a href="https://www.producthunt.com/categories/ai-agents" target="_blank">AI Agents 카테고리 2026</a></li>
+        <li><a href="https://www.producthunt.com/categories/ai-coding-agents" target="_blank">AI Coding Agents 카테고리</a></li>
+        <li><a href="https://www.producthunt.com/categories/ai-designer" target="_blank">AI Designer 카테고리</a></li>
+      </ul>
+    </div>
+
+    <div class="src-group">
+      <h4>시장 규모 · 글로벌</h4>
+      <ul>
+        <li><a href="https://www.grandviewresearch.com/industry-analysis/ai-agents-market-report" target="_blank">AI Agents Market — Grand View Research</a></li>
+        <li><a href="https://www.fortunebusinessinsights.com/agentic-ai-market-114233" target="_blank">Agentic AI — Fortune Business Insights</a></li>
+        <li><a href="https://www.precedenceresearch.com/ai-agents-market" target="_blank">AI Agents — Precedence Research</a></li>
+        <li><a href="https://www.thebusinessresearchcompany.com/report/ai-powered-content-creation-global-market-report" target="_blank">AI Content Creation — TBRC</a></li>
+        <li><a href="https://www.ideaplan.io/blog/ai-coding-assistant-market-share-2026" target="_blank">AI Coding Assistant 2026 — IdeaPlan</a></li>
+        <li><a href="https://www.mordorintelligence.com/industry-reports/global-chatbot-market" target="_blank">Enterprise Search / Chatbot — Mordor</a></li>
+        <li><a href="https://www.precedenceresearch.com/retrieval-augmented-generation-market" target="_blank">RAG Market — Precedence</a></li>
+        <li><a href="https://www.grandviewresearch.com/industry-analysis/ai-voice-agents-market-report" target="_blank">AI Voice Agents — Grand View</a></li>
+      </ul>
+    </div>
+
+    <div class="src-group">
+      <h4>한국 시장 · 한국 LLM</h4>
+      <ul>
+        <li><a href="https://www.sphericalinsights.com/ko/reports/south-korea-artificial-intelligence-ai-market" target="_blank">South Korea AI Market — Spherical</a></li>
+        <li><a href="https://www.wedesignx.com/ai-lab/2026-korea-gen-ai-market-trends" target="_blank">2026 한국 Gen AI 시장 — wedesignx</a></li>
+        <li><a href="https://koreatechtoday.com/from-llms-to-agents-naver-and-kakao-enter-next-phase-of-ai-competition/" target="_blank">Naver / Kakao Agentic AI — KoreaTechToday</a></li>
+        <li><a href="https://fortune.com/2026/03/05/korea-startup-wrtn-arr-antler-loneliness-epidemic-ai-entertainment/" target="_blank">Wrtn $100M ARR — Fortune</a></li>
+        <li><a href="https://www.allganize.ai/en/blog/2025-growth-in-the-year-of-agentic-ai-and-roi-reckoning" target="_blank">Allganize 2026 Growth Report</a></li>
+        <li><a href="https://munhwa.com/news/view.html?no=2024040101031907301001" target="_blank">한국 AICC 46조원 — 문화일보</a></li>
+        <li><a href="https://www.statista.com/outlook/tmo/public-cloud/software-as-a-service/south-korea" target="_blank">South Korea SaaS — Statista</a></li>
+        <li><a href="https://www.aiexpo.co.kr/home/v6.php?s=36" target="_blank">AI EXPO Korea 2026</a></li>
+      </ul>
+    </div>
+
+    <div class="src-group">
+      <h4>규제 · 컴플라이언스</h4>
+      <ul>
+        <li><a href="https://fpf.org/blog/south-koreas-new-ai-framework-act-a-balancing-act-between-innovation-and-regulation/" target="_blank">Korea AI Framework Act — FPF</a></li>
+        <li><a href="https://connectontech.bakermckenzie.com/south-korea-sets-ai-standard-pipcs-guidelines-for-generative-ai-present-obligations-opportunity/" target="_blank">PIPC Generative AI Guidelines — Baker McKenzie</a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer class="colophon">
+  <span>PH × KR Market Report</span>
+  <span>Set in Source Serif 4 · Pretendard · JetBrains Mono</span>
+  <span>© 2026 — One-person Startup Research</span>
+</footer>
+
+</div>
+
+<script>
+// ============= DATA =============
+const SERVICES = [
+  {n:1, name:"SpeakON", tag:"MagSafe AI 디바이스 — 누르면 어떤 앱에든 말로 입력", problem:"모바일 텍스트 입력 마찰", cat:"음성/대화", tier:"H", tech:"On-device ASR"},
+  {n:2, name:"Wispr Flow", tag:"어디서든 작동하는 받아쓰기 — 사용자 톤 학습, 100+ 언어", problem:"키보드 입력 느림, 음성→텍스트 품질", cat:"음성/대화", tier:"H", tech:"Tone-matching ASR"},
+  {n:3, name:"KREV", tag:"이커머스 브랜드용 AI 크리에이티브 에이전트", problem:"이커머스 광고 소재 제작 비용", cat:"세일즈/마케팅", tier:"H", tech:"브랜드 학습 이미지·비디오 생성"},
+  {n:4, name:"Brila", tag:"구글맵 리뷰로 한 페이지 웹사이트 자동 생성", problem:"SMB 웹사이트 카피라이팅", cat:"세일즈/마케팅", tier:"H", tech:"LLM 패턴 추출"},
+  {n:5, name:"ProdShort", tag:"미팅을 곧바로 게시 가능한 숏폼/포스트로", problem:"회의 콘텐츠 재가공", cat:"콘텐츠 생성", tier:"H", tech:"미팅→비디오 파이프라인"},
+  {n:6, name:"Velo", tag:"무엇이든 비디오 메시지로 공유", problem:"비동기 비디오 커뮤니케이션", cat:"미팅/커뮤", tier:"H", tech:"Quick async video + AI 요약"},
+  {n:7, name:"NovaVoice", tag:"스마트 딕테이션 + 음성 OS 제어", problem:"음성 OS 레벨 제어", cat:"음성/대화", tier:"M", tech:"스트리밍 ASR + 시스템 액션"},
+  {n:8, name:"Lessie AI", tag:"검색, 도달, 연결 — 10배 빠른 매칭", problem:"세일즈 프로스펙팅", cat:"세일즈/마케팅", tier:"M", tech:"Lead-gen 에이전트"},
+  {n:9, name:"Offsite", tag:"인간-AI 하이브리드 팀 조직 관리", problem:"인간+AI 팀 가시성·승인", cat:"에이전트 오케스트", tier:"H", tech:"MCP 호환 조직도, 액션 승인"},
+  {n:10, name:"Spine", tag:"내 워크앱에 연결되는 AI 리서치 에이전트", problem:"스케줄 리서치→워크스페이스 배달", cat:"지식 관리/RAG", tier:"M", tech:"Notion/Docs/Sheets 커넥터"},
+  {n:11, name:"AgentPulse", tag:"Claude Code / OpenClaw 에이전트 DevOps 대시보드", problem:"AI 코딩 에이전트 운영 가시성", cat:"AI 평가/관측", tier:"M", tech:"세션, cron, 비용, 메모리"},
+  {n:12, name:"Baton", tag:"내 AI 코딩 에이전트 오케스트레이션", problem:"여러 코딩 에이전트 병렬 실행", cat:"개발자 도구", tier:"M", tech:"Git 격리 워크스페이스"},
+  {n:13, name:"Ovren", tag:"내 AI 엔지니어링 부서", problem:"백로그→배포 엔드투엔드", cat:"에이전트 오케스트", tier:"M", tech:"멀티 에이전트 엔지니어링 팀"},
+  {n:14, name:"Luma Agents", tag:"크리에이티브 컨텍스트로 계획·반복·정제", problem:"크리에이티브 프로덕션 에이전트", cat:"콘텐츠 생성", tier:"M", tech:"크리에이티브 컨텍스트 메모리"},
+  {n:15, name:"Codex 2.0", tag:"앱 실행, 작업 자동화, 코딩 모두", problem:"범용 개발자 코파일럿", cat:"개발자 도구", tier:"M", tech:"OpenAI agentic coding"},
+  {n:16, name:"Claude Code Voice Mode", tag:"Claude Code에 음성 프롬프트", problem:"핸즈프리 코딩", cat:"개발자 도구", tier:"H", tech:"Anthropic voice IO"},
+  {n:17, name:"Claude Code Desktop", tag:"하나의 데스크탑에서 병렬 코딩 에이전트", problem:"멀티 에이전트 코딩 UX", cat:"개발자 도구", tier:"H", tech:"네이티브 데스크탑, 병렬 세션"},
+  {n:18, name:"Claude Design", tag:"Claude와 대화하며 프로토타입·슬라이드 제작", problem:"빠른 디자인 아티팩트", cat:"AI 디자인", tier:"H", tech:"Claude 네이티브 캔버스"},
+  {n:19, name:"Claude Advisor", tag:"Claude 플랫폼 내 어드바이저 도구", problem:"Claude 내 의사결정 지원", cat:"에이전트 오케스트", tier:"H", tech:"Anthropic 플랫폼 확장"},
+  {n:20, name:"Claude for Word", tag:"Microsoft Word 안에서 Claude", problem:"Word 문서 작성", cat:"개인 생산성", tier:"H", tech:"MS Word 애드인"},
+  {n:21, name:"Denovo", tag:"자율 비즈니스 운영", problem:"엔드투엔드 운영 자동화", cat:"에이전트 오케스트", tier:"M", tech:"멀티 에이전트 비즈 워크플로"},
+  {n:22, name:"Mngr", tag:"100+ Claude 에이전트 병렬 실행", problem:"대규모 병렬 에이전트 오케", cat:"에이전트 오케스트", tier:"M", tech:"Claude 플릿 매니저"},
+  {n:23, name:"Grok 4.2", tag:"진실 탐구를 위한 자기 토론 AI", problem:"LLM 추론 품질", cat:"파운데이션 모델", tier:"H", tech:"모델 내 멀티 에이전트 토론"},
+  {n:24, name:"Sydekaiq", tag:"24/7 프라이빗 서버에 내 AI 에이전트", problem:"항시 켜진 개인 에이전트 호스팅", cat:"에이전트 오케스트", tier:"M", tech:"셀프 호스팅 에이전트 런타임"},
+  {n:25, name:"Monid", tag:"하나의 지갑 — 에이전트가 쓰는 모든 유료 도구", problem:"에이전트 결제·도구 액세스", cat:"에이전트 인프라", tier:"H", tech:"에이전트 결제 라우팅"},
+  {n:26, name:"DeepSeek-V4", tag:"1M 컨텍스트 오픈소스 LLM", problem:"프론티어 OSS LLM, 롱 컨텍스트", cat:"파운데이션 모델", tier:"H", tech:"1.6T MoE, 1M ctx"},
+  {n:27, name:"Magic Patterns Agent 2.0", tag:"AI 디자인 에이전트 — 아이디어→배포", problem:"디자이너→배포 UI", cat:"AI 디자인", tier:"M", tech:"프롬프트→React/Tailwind"},
+  {n:28, name:"Kimi K2.6", tag:"오픈소스 장기 코딩·에이전트 스웜", problem:"프론티어 오픈 코딩 모델", cat:"파운데이션 모델", tier:"H", tech:"1T params, 32B active"},
+  {n:29, name:"AssemblyAI Voice Agent API", tag:"프로덕션 보이스 에이전트 빌드", problem:"ASR/LLM/TTS 통합", cat:"음성/대화", tier:"M", tech:"단일 WebSocket, Universal-3 Pro"},
+  {n:30, name:"Jet AI Agents", tag:"몇 분 안에 비즈니스 AI 에이전트 빌드", problem:"노코드 비즈 에이전트 빌더", cat:"에이전트 오케스트", tier:"M", tech:"통합 내장 에이전트 빌더"},
+  {n:31, name:"Logic", tag:"에이전트 플릿 빌드·운영", problem:"에이전트 플릿 운영", cat:"에이전트 오케스트", tier:"M", tech:"플릿 오케스트레이션"},
+  {n:32, name:"Wonder", tag:"캔버스 위에서 작동하는 AI 디자인 에이전트", problem:"UI/그래픽/피치 생성", cat:"AI 디자인", tier:"H", tech:"MCP to Cursor/Claude Code"},
+  {n:33, name:"Stitch 2.0 (Google)", tag:"프롬프트→편집 가능 UI·프로토타입·코드", problem:"프롬프트로 UI 디자인", cat:"AI 디자인", tier:"H", tech:"DESIGN.md, 5-screen canvas"},
+  {n:34, name:"Genpire", tag:"AI로 실제 제품 만들기", problem:"아이디어→양산 가능 스펙", cat:"기타", tier:"M", tech:"소싱 + 생산 핸드오프"},
+  {n:35, name:"Vibespace", tag:"앱·워크플로용 로컬 멀티 에이전트 생성", problem:"로컬 우선 에이전트 개발", cat:"에이전트 오케스트", tier:"M", tech:"온디바이스 멀티 에이전트"},
+  {n:36, name:"Pipali", tag:"프라이버시 안전 데스크탑 작업 실행", problem:"로컬 데스크탑 자동화", cat:"브라우저/데스크탑", tier:"M", tech:"프라이버시 우선 컴퓨터 유즈"},
+  {n:37, name:"Frontdesk AI", tag:"음성·챗·SMS·예약·CRM 고객 컴 에이전트", problem:"고객지원/프론트데스크 자동화", cat:"고객 지원", tier:"M", tech:"Voice+chat+CRM 오케"},
+  {n:38, name:"Kanwas", tag:"팀을 위한 오픈소스 두뇌", problem:"인간+에이전트 팀 지식", cat:"지식 관리/RAG", tier:"H", tech:"OSS 워크스페이스"},
+  {n:39, name:"FlowMarket", tag:"B2B 딜 생성하는 AI 에이전트 소셜 네트워크", problem:"에이전트 간 B2B 리드 생성", cat:"세일즈/마케팅", tier:"M", tech:"에이전트 간 마켓플레이스"},
+  {n:40, name:"Mindra", tag:"실제로 위임 가능한 에이전트 팀", problem:"에이전트 팀 커맨드 센터", cat:"에이전트 오케스트", tier:"M", tech:"멀티 도메인 에이전트 오케"},
+  {n:41, name:"PandaProbe", tag:"오픈소스 에이전트 엔지니어링 플랫폼", problem:"AI 에이전트 trace/평가/모니터/디버그", cat:"AI 평가/관측", tier:"M", tech:"OSS 에이전트 관측"},
+  {n:42, name:"Mintlify", tag:"AI 에이전트를 위한 지식 인프라", problem:"에이전트 컨텍스트로서 문서", cat:"지식 관리/RAG", tier:"H", tech:"AI 검색 문서, 에이전트 친화"},
+  {n:43, name:"Keel", tag:"메모리를 사용자가 소유하는 AI 어시스턴트", problem:"사용자 소유 LLM 메모리", cat:"개인 생산성", tier:"M", tech:"로컬/사용자 통제 메모리"},
+  {n:44, name:"AgentPeek", tag:"Mac 노치에 Claude Code & Codex", problem:"항시 보이는 코딩 에이전트 UI", cat:"개발자 도구", tier:"M", tech:"Mac 노치 메뉴바 앱"},
+  {n:45, name:"LumiChats Offline", tag:"완전 오프라인, 데이터 수집 0, 100% 무료", problem:"프라이빗 오프라인 챗봇", cat:"기타", tier:"M", tech:"Local LLM, OSS"},
+  {n:46, name:"Lovable Desktop", tag:"탭으로 프로젝트 관리, 로컬 MCP로 강력한 워크플로", problem:"멀티 프로젝트 AI 풀스택 개발", cat:"개발자 도구", tier:"H", tech:"MCP 데스크탑 IDE"},
+  {n:47, name:"Gemini Robotics ER 1.6", tag:"구글 SOTA 로보틱스 모델 — 시각·공간 추론", problem:"로보틱스 추론/임바디드 AI", cat:"파운데이션 모델", tier:"H", tech:"Google 로보틱스 파운데이션"},
+  {n:48, name:"Happycapy", tag:"나머지를 위한 에이전트 네이티브 컴퓨터", problem:"컨슈머 친화 Claude Code GUI", cat:"에이전트 오케스트", tier:"H", tech:"브라우저 에이전트 컴퓨터"},
+  {n:49, name:"Kilo Code v7", tag:"병렬 에이전트, diff 리뷰어, 멀티 모델 비교", problem:"IDE 내 멀티 에이전트 코딩", cat:"개발자 도구", tier:"H", tech:"VS Code 확장, 멀티 모델"},
+  {n:50, name:"Superset 2.0", tag:"수백 개 코딩 에이전트 병렬 실행", problem:"대규모 병렬 코딩 에이전트", cat:"개발자 도구", tier:"H", tech:"병렬 에이전트 러너"},
+  {n:51, name:"Huddle01 VMs", tag:"내 에이전트를 위한 가상 머신", problem:"에이전트 컴퓨트 인프라", cat:"에이전트 인프라", tier:"H", tech:"컨테이너 에이전트 VM"},
+  {n:52, name:"OpenJobs AI", tag:"엔드투엔드 자율 AI 리크루터", problem:"채용 자동화", cat:"에이전트 오케스트", tier:"M", tech:"풀펀넬 처리"},
+  {n:53, name:"Graphbit PRFlow", tag:"AI 코드 리뷰어 — 남들이 놓친 것 발견", problem:"자동 코드 리뷰", cat:"개발자 도구", tier:"M", tech:"GitHub 내 결정론적 리뷰어"},
+  {n:54, name:"Kelviq", tag:"SaaS·AI 회사용 결제·세무·빌링", problem:"AI SaaS 수익화 스택", cat:"기타", tier:"M", tech:"MoR, 사용량 빌링, 라이선스"},
+  {n:55, name:"Articuler.ai", tag:"목표를 말하면, 알맞은 전문가를 매칭", problem:"AI를 통한 전문가 매칭", cat:"세일즈/마케팅", tier:"M", tech:"의도→전문가 매칭"}
+];
+
+const CLUSTERS = [
+  {n:1, name:"에이전트 오케스트레이션 / 플릿 운영", count:14, desc:"단일 챗봇에서 '여러 에이전트를 직원처럼' 운영하는 패러다임으로. 병렬 실행·승인·가시성·메모리가 핵심 과제.", examples:["Offsite","Mngr","Baton","Logic","Mindra","Superset 2.0","Happycapy","OpenJobs AI"]},
+  {n:2, name:"AI 코딩 메타 도구", count:10, desc:"Claude Code / Codex를 깔고 그 위에 운영·UI·통합을 더하는 도구. 1인 개발자가 좋아하는 시장이지만 이미 포화.", examples:["Claude Code Voice","AgentPeek","Lovable Desktop","Kilo Code v7","Baton","Graphbit PRFlow"]},
+  {n:3, name:"음성 우선 인터페이스", count:5, desc:"키보드를 우회해 음성으로 시스템·앱을 제어. 한국어 화자에게는 사투리·존댓말·코드스위칭 한계가 존재.", examples:["SpeakON","Wispr Flow","NovaVoice","Claude Code Voice","AssemblyAI Voice Agent"]},
+  {n:4, name:"AI 디자인 / UI 생성", count:5, desc:"프롬프트 → 디자인 → 코드 파이프라인. Stitch · Wonder · Magic Patterns가 빠르게 카테고리 정의 중.", examples:["Claude Design","Wonder","Stitch 2.0","Magic Patterns","Luma Agents"]},
+  {n:5, name:"지식 인프라 / RAG", count:5, desc:"에이전트를 위한 지식 컨텍스트 계층. 문서 · 메모리 · 팀 지식 관리.", examples:["Mintlify","Kanwas","Spine","Keel","Sydekaiq"]},
+  {n:6, name:"에이전트 인프라 (Compute · Pay · Observe)", count:5, desc:"'AWS-for-agents' 스택. 결제 · 컴퓨트 · 관측 · 빌링이 모두 별도 제품화.", examples:["Monid","Huddle01 VMs","PandaProbe","AgentPulse","Kelviq"]},
+  {n:7, name:"진짜 소스 콘텐츠", count:4, desc:"환각 대신 실제 데이터(리뷰 · 미팅 · 메시지)에서 콘텐츠 추출. 신뢰성 · 진정성으로 차별화.", examples:["Brila","ProdShort","Velo","KREV"]},
+  {n:8, name:"버티컬 에이전트 + 파운데이션 모델", count:7, desc:"수직 도메인 에이전트(채용 / CS / 제조)와 새 OSS 프론티어 모델(DeepSeek V4, Kimi K2.6).", examples:["OpenJobs AI","Frontdesk AI","KREV","Genpire","DeepSeek-V4","Kimi K2.6"]}
+];
+
+const GLOBAL_MARKET = [
+  {cat:"AI 에이전트", size:11.5, cagr:45},
+  {cat:"AI 마케팅", size:65, cagr:36},
+  {cat:"AI 코딩 도구", size:12.8, cagr:25},
+  {cat:"AI 고객지원", size:15.1, cagr:26},
+  {cat:"AI 데이터 분석", size:28.1, cagr:23},
+  {cat:"AI 콘텐츠 생성", size:4.3, cagr:21},
+  {cat:"보이스 AI", size:3.5, cagr:38},
+  {cat:"RAG/지식관리", size:3.3, cagr:42},
+  {cat:"AI 회의 어시", size:2.4, cagr:25},
+  {cat:"AI 개인생산성", size:4.8, cagr:30}
+];
+
+const KOREA_DATA = [
+  {cat:"AI 에이전트", global:11.5, korea:0.8, note:"APAC 22% 기준 추정"},
+  {cat:"AI 마케팅", global:65, korea:3.5, note:"Cafe24/Imweb 활성, 활성 시장"},
+  {cat:"AI 코딩 도구", global:12.8, korea:0.5, note:"국내 플레이어 부재, 온프렘 수요"},
+  {cat:"AI 고객지원", global:15.1, korea:0.33, note:"한국 AICC 454B KRW by 2030"},
+  {cat:"AI 데이터 분석", global:28.1, korea:1.2, note:"한국 컬럼명·온프렘 미충족"},
+  {cat:"AI 콘텐츠 생성", global:4.3, korea:0.5, note:"Wrtn $100M ARR 사례"},
+  {cat:"보이스 AI", global:3.5, korea:0.8, note:"APAC $5.37B, 한국 강세"},
+  {cat:"RAG/지식관리", global:3.3, korea:0.3, note:"HWP 한계 + Allganize 30M USD 펀딩"},
+  {cat:"AI 회의 어시", global:2.4, korea:0.4, note:"Daglo/Clova 노트 강세"},
+  {cat:"AI 개인생산성", global:4.8, korea:0.2, note:"플랫폼 분절로 구조적 갭"}
+];
+
+const INCUMBENTS = [
+  {cat:"AI 에이전트", players:"Kakao Kanana, Naver HyperCLOVA X 에이전트, Allganize", pos:"플랫폼 플레이 (Kakao/Naver), 엔터프라이즈 (Allganize)", gap:"버티컬 워크플로 에이전트, SMB 가격대 (5–30만원/월)"},
+  {cat:"AI 마케팅", players:"Cafe24, Imweb, Datarize, Channel Talk", pos:"이커머스 SaaS 번들, 미드마켓 CRM", gap:"네이버 SEO 콘텐츠 도구, 쿠팡 셀러 자동화, 카카오 채널 마케팅"},
+  {cat:"AI 코딩 도구", players:"거의 없음. Naver Cloud 내부 도구, Upstage (LLM 만), Codeit", pos:"파운데이션 모델 또는 인하우스", gap:"국내 대기업/금융용 온프렘 코딩 어시스턴트 — 무주공산"},
+  {cat:"AI 고객지원", players:"Channel Talk, KT AICC, SKT Voicebot, Maum AI, Skelter Labs", pos:"미드마켓~엔터프라이즈, 통신사 솔루션", gap:"카카오톡 우선 SMB 챗봇 (3–8만원/월 가격대)"},
+  {cat:"AI 콘텐츠 생성", players:"Wrtn (글로벌 확장 중), Naver CLOVA X, Lovo, Typecast", pos:"호리즌탈 컨슈머 (Wrtn), 음성 합성", gap:"네이버 SEO 블로그, 자소서/면접, K-콘텐츠 스크립트"},
+  {cat:"RAG/지식관리", players:"Allganize, Liner, Naver Cloud, Saltlux", pos:"F500 엔터프라이즈 (Allganize), 컨슈머 검색 (Liner)", gap:"HWP-네이티브 RAG, 세무사/변호사 SMB"},
+  {cat:"AI 회의 어시", players:"Naver Clova Note, Daglo, Tiro, Callabo, SK A.도트 노트", pos:"포화. 한국어 STT 우수", gap:"법률/의료 규제 영역, 카카오 음성노트 일괄 전사"},
+  {cat:"보이스 AI", players:"Naver CLOVA, Kakao i, SKT NUGU, Saltlux, Maum AI, Skelter, ReturnZero", pos:"엔터프라이즈 사업 중심", gap:"클리닉/식당/법무 버티컬 보이스 에이전트 (10만원/월 SMB)"},
+  {cat:"AI 데이터 분석", players:"Heartcount, Hancom, Impactive AI", pos:"산업별 분석 솔루션", gap:"한국어/한글 컬럼 text-to-SQL, 네이버·쿠팡 셀러 분석"},
+  {cat:"AI 개인생산성", players:"Naver Works, Kakao Work, Toss Workplace", pos:"국산 협업 슈트", gap:"카카오톡 메시지 트라이아지, 네이버 메일 AI, 통합 캘린더 스케줄러"}
+];
+
+const IDEAS = [
+  {
+    rank: 1, category: "Vertical Content · SEO",
+    name: "네이버 SEO 콘텐츠 엔진",
+    sub: "스마트스토어 / 블로그 셀러용",
+    oneLiner: "Brila의 '리뷰→웹사이트' 패턴을 네이버 생태계에 맞춰. 실제 리뷰·키워드 데이터에서 네이버 알고리즘 친화 콘텐츠 생성.",
+    market: "글로벌 AI 마케팅 $65B · CAGR 36% · 한국 스마트스토어 100만+ 셀러",
+    pricing: "₩29,000 — ₩99,000 / 월",
+    mvp: "2–3주",
+    difficulty: 2,
+    competition: "Cafe24 / Imweb은 결제·재고 중심, Wrtn은 horizontal + 글로벌화 — 네이버 SEO 전용 도구 부재",
+    differentiation: "C-Rank / D.I.A. 알고리즘 fine-tune, 네이버 검색 API + 자체 키워드 분석, 한글 형태소, 카테고리 콘텐츠 템플릿",
+    workflow: ["네이버 검색 API + DataLab으로 키워드 트렌드 수집", "쿠팡 / 스마트스토어 상위 노출 상품 리뷰 스크래핑", "OpenAI / Anthropic으로 SEO 최적화 블로그·상품 설명 생성", "Toss · KakaoPay 결제 + 무료 키워드 분석 리포트 리드 마그넷"],
+    tech: ["Next.js","Python","OpenAI API","Naver Search API","Supabase","Toss Payments","KoNLPy"],
+    moat: "네이버 알고리즘 변경 추적은 글로벌 SaaS가 못 함. 한국어 형태소 + 카테고리 데이터는 시간이 갈수록 누적",
+    risk: "네이버 정책 변경 시 즉각 영향. 셀러 시장 가격 민감 → ARPU 낮을 수 있음"
+  },
+  {
+    rank: 2, category: "Voice Agent · SMB",
+    name: "카카오톡 SMB 보이스 에이전트",
+    sub: "클리닉 / 식당 예약 콜",
+    oneLiner: "노쇼·전화 응대에 시달리는 의원·클리닉·식당을 위한 24/7 한국어 보이스 에이전트. 카카오 알림톡까지 통합.",
+    market: "한국 AICC ₩454B (2030, CAGR 23.7%) · 의원 ~3만, 한의원 ~1.5만, 동네 식당 ~70만",
+    pricing: "₩99,000 — ₩290,000 / 월",
+    mvp: "4–6주",
+    difficulty: 3,
+    competition: "Saltlux / Maum / Skelter는 엔터프라이즈만, Channel Talk는 텍스트 중심 — 한국어 SMB 보이스 부재",
+    differentiation: "한국어 사투리 · 존댓말 ASR, 의료/식당 도메인 fine-tune, 카카오 알림톡 후속, Toss Place 예약 통합",
+    workflow: ["인입 콜 받아 한국어 ASR → 의도 분류", "예약 가능 시간 슬롯 LLM 추론 + 캘린더 통합", "예약 확정 즉시 카카오 알림톡 발송", "노쇼 24시간 전 자동 리마인더"],
+    tech: ["Whisper + 한국어 fine-tune","ElevenLabs / Naver Clova TTS","FastAPI","Twilio Korea / Plivo","Kakao Business API","Toss Payments"],
+    moat: "한국어 의료/요식 도메인 데이터 누적 + 카카오 알림톡 정식 연동 (사업자 인증 필요)",
+    risk: "의료광고법 / 전자상거래법 검토 필요. 카카오 비즈메시지 단가 부담"
+  },
+  {
+    rank: 3, category: "Vertical RAG · Professional SMB",
+    name: "HWP-Native 버티컬 RAG",
+    sub: "세무사 / 변호사 / 법무사 SMB",
+    oneLiner: "한국 전문직 SMB가 HWP·HWPX 문서를 직접 다룰 수 있는 RAG. Allganize의 F500을 거꾸로, 1인~10인 사무소 가격대.",
+    market: "글로벌 RAG $3.3B (CAGR 42%) · 한국 세무사 ~1.5만, 법무사 ~7천, 변호사 ~3만 사무소",
+    pricing: "₩99,000 — ₩390,000 / 월",
+    mvp: "6–8주",
+    difficulty: 4,
+    competition: "Allganize는 F500 (LG, KB 등), 글로벌 RAG는 HWP 못 다룸 — SMB 가격대 무주공산",
+    differentiation: "pyHWP 기반 한국어 문서 파싱, KoE5 / KoSimCSE 임베딩, 판례·세법 컨텍스트, 온프렘 옵션 (Naver Cloud)",
+    workflow: ["HWP / HWPX / PDF 업로드 → 텍스트 + 표 추출", "Korean embedding으로 chunk · 벡터 저장 (Qdrant)", "질의 시 hybrid search + 인용 출처 표시", "Naver Cloud 또는 KT Cloud 온프렘 배포 옵션"],
+    tech: ["Python","pyHWP","LangChain","Qdrant","KoE5/KoSimCSE","Next.js","Naver Cloud"],
+    moat: "HWP 파싱 노하우 + 도메인별 임베딩 fine-tune + ISMS-P 인증은 시간이 곧 해자",
+    risk: "변호사법·세무사법 등 직역 광고 규제. ISMS-P 인증 비용 (~5천만 원) 부담"
+  },
+  {
+    rank: 4, category: "Vertical B2C · Edu",
+    name: "자소서 / 면접 AI 코치",
+    sub: "대기업 · 금융권 특화",
+    oneLiner: "Wrtn의 호리즌탈을 떠나 한국 신입 채용 시장에 수직 집중. 자소서 첨삭 + 음성 면접 시뮬레이션 + 대기업 컬처 fine-tune.",
+    market: "글로벌 AI 콘텐츠 $4.3B · 한국 신입 구직자 ~50만 / 년 + 이직자 ~100만 / 년",
+    pricing: "₩9,900 (1회) — ₩39,000 / 월",
+    mvp: "2–3주",
+    difficulty: 1,
+    competition: "Wrtn은 horizontal · 글로벌, 잡코리아 · 사람인은 매칭 중심 — 자소서/면접 AI 전문 부재",
+    differentiation: "삼성·LG·SK·네이버·카카오 컬처별 자소서 톤·인성·면접 질문 fine-tune, 음성 면접 시뮬 + 발화 분석",
+    workflow: ["자소서 입력 → 회사별·직군별 첨삭", "음성 면접 시뮬레이션 (대답 → STT → 톤·내용 평가)", "예상 질문 100+ 분야별 데이터베이스", "B2B → 취업 컨설팅 학원 화이트라벨"],
+    tech: ["Next.js","OpenAI GPT-5","Whisper","Web Audio API","Supabase","Stripe / Toss"],
+    moat: "회사별·년도별 자소서 패턴 누적 데이터. 학원·대학 화이트라벨 진입 시 록인",
+    risk: "B2C 가격 민감. 결과 보장 어려움 (구직 결과는 다변수). 잡코리아 인수 가능성"
+  },
+  {
+    rank: 5, category: "Chatbot · SMB",
+    name: "카카오톡 채널 자동응답 빌더",
+    sub: "Channel Talk 아래 가격대",
+    oneLiner: "스마트스토어·인스타그램 셀러용 카카오톡 채널 응답 자동화. Channel Talk이 미드마켓·엔터프라이즈만 — 소상공인용 ₩30K/월 가격대.",
+    market: "한국 AI 고객지원 ₩330M+ · 카카오톡 채널 운영 사업자 ~60만 · Channel Talk ARR ~$50M",
+    pricing: "₩29,000 — ₩89,000 / 월",
+    mvp: "3–4주",
+    difficulty: 2,
+    competition: "Channel Talk · Solution Box · KT AICC 모두 미드마켓 이상 — 소상공인 가격대 비어있음",
+    differentiation: "카카오톡 채널 메시지 API 직접 통합, FAQ → RAG 자동 구축, 친구톡 · 알림톡 통합, 노션 · 구글시트 동기화",
+    workflow: ["카카오 비즈니스 채널 연동", "기존 FAQ / 문서를 RAG로 인덱싱", "들어오는 1:1 채팅을 LLM이 응답 → 어려우면 사람 핸드오프", "친구톡 마케팅 자동화 + 알림톡 발송"],
+    tech: ["Next.js","Node.js","Kakao Business API","OpenAI","Pinecone / Qdrant","Supabase","Toss Payments"],
+    moat: "카카오 채널 설정·인증 노하우 (높은 진입 장벽), 한국 소상공인 메시지 데이터 누적",
+    risk: "카카오 API 정책 변경 위험. 소상공인 결제 의향 변동성"
+  }
+];
+
+const REDDIT_COMMUNITIES = [
+  {
+    n: 1, name: "r/LocalLLaMA", subs: "~717k",
+    relevance: "LLM 자체 호스팅·RAG·보이스·모델 선택의 실무자 커뮤니티. 한국어 모델(Qwen, Gemma, BGE-M3)이 단골 주제 — 한국 버티컬 AI에 직접적.",
+    typical: "모델 출시 토론, RAG·임베딩 how-to, GPU 빌드, 에이전트 프레임워크 프로덕션 가능성 논쟁",
+    map: ["#2 보이스","#3 HWP RAG"]
+  },
+  {
+    n: 2, name: "r/SaaS", subs: "~336k",
+    relevance: "최대 SaaS 창업가 커뮤니티. 버티컬 AI 해자, AI-wrapper 경제, SMB GTM이 단골. 디스트리뷰션 병목이 가장 활발히 논의됨.",
+    typical: "MRR 마일스톤, 니치 검증 스레드, 마케팅 채널 사후분석, 'I built X' 런칭",
+    map: ["전 영역"]
+  },
+  {
+    n: 3, name: "r/SideProject", subs: "~688k",
+    relevance: "솔로 런칭 최대 show-and-tell. PaperAI, AutoAE 등 최근 AI MVP가 Product Hunt 전 여기서 씨앗을 뿌림.",
+    typical: "런칭 포스트, 데모 비디오, AI 도구 피드백 요청, 다국적 개발자 교차 게시",
+    map: ["#4 자소서/면접","#1 네이버 SEO"]
+  },
+  {
+    n: 4, name: "r/microsaas", subs: "~117k",
+    relevance: "1인 비즈니스 명시 표방. r/SaaS보다 밀도 높고 아이디어 검증 중심. 비영어권·언더서브드 버티컬 단골 논의.",
+    typical: "'50 micro-SaaS 리서치' 심층, 니치 아이디어 브레인스토밍, AI 래퍼 비판, 라면 흑자 일지",
+    map: ["전 영역, 특히 #3 HWP RAG"]
+  },
+  {
+    n: 5, name: "r/indiehackers", subs: "~151k",
+    relevance: "IndieHackers.com의 Reddit 오버플로. 3시간 빌드 · 30일 출시 · AI 코딩 툴 비교가 단골. '빠른 AI MVP'의 최강 커뮤니티.",
+    typical: "출시 로그, AI 코딩 도구 비교 (Replit/Claude Code/Cursor), 매출 업데이트, '첫 100 사용자' 전술 포스트",
+    map: ["#4 자소서/면접","#5 카카오 채널"]
+  }
+];
+
+const REDDIT_POSTS = [
+  {n:1, sub:"r/LocalLLaMA", title:"Excitement about DeepSeek release", problem:"오픈웨이트 모델 품질이 마침내 자체 호스팅을 프로덕션 RAG·에이전트에 가능하게 했는지. OpenAI·Anthropic API 지출의 대안 검증.", up:"2.3k", date:"2025"},
+  {n:2, sub:"r/LocalLLaMA", title:"Zuckerberg watching you use Qwen instead of LLaMA", problem:"Qwen이 한국어 등 아시아 언어 워크로드 지배 — 한국 버티컬 AI 제품의 핵심 의존성 변화.", up:"2.9k", date:"2025"},
+  {n:3, sub:"r/LocalLLaMA", title:"PI Coding Agent + local Qwen3.6 35b — actually insane", problem:"컨슈머 하드웨어에서 프로덕션 코딩 에이전트 가능. '솔로 개발자도 큰 인프라 없이 AI 출시 가능' 검증.", up:"487", date:"2026.04.23"},
+  {n:4, sub:"r/SaaS", title:"Hitting $30k MRR with an AI marketing product", problem:"빌더 대상 AI 도구는 $15/월 천장에 막힘. 언더서브드 버티컬에서는 $1.5K/월 가격 통함 — '버티컬·한국 SMB' 테제 검증.", up:"높음", date:"2025"},
+  {n:5, sub:"r/SaaS", title:"The hardest part isn't building — it's maintaining as AI tools & client requirements evolve", problem:"SMB의 AI 가격 저항 + AI 에이전시의 유지보수 세금. 카카오톡 보이스(#2)·채널 자동응답(#5)에 직접 매핑.", up:"높음", date:"2025–2026"},
+  {n:6, sub:"r/SideProject", title:"PaperAI — built in 1 day, 100+ users in 3.5 months", problem:"버티컬 AI 문서 도구가 며칠 만에 출시 가능함을 보여줌. HWP-네이티브 아이디어 #3과 정확히 일치.", up:"바이럴", date:"2025"},
+  {n:7, sub:"r/SideProject", title:"Free app for hard conversations — uses Claude, no backend, BYO API key", problem:"사용자가 자기 OpenAI 키를 갖다 쓰는 BYO 모델. 한국 B2B(변호사·세무사) 컴플라이언스 회피 패턴.", up:"높음", date:"2026"},
+  {n:8, sub:"r/SideProject", title:"AI answers on screen during mock interviews — interviewer can't see", problem:"면접 시뮬레이션 수요 폭발 (윤리 이슈 있는 버전이 바이럴). 합법적 '면접 코칭'은 같은 수요를 잡음. 아이디어 #4와 인접.", up:"매우 높음", date:"2026"},
+  {n:9, sub:"r/microsaas", title:"I Researched 50 Successful Micro-SaaS Projects", problem:"결론: 버티컬 CRM, 산업별 이메일 도구($19–39/월), 리뷰 스크레이퍼가 일관되게 승리. 우리 Top 5 리스트와 거의 일치.", up:"높음", date:"2025"},
+  {n:10, sub:"r/microsaas", title:"Vertical AI Micro-SaaS — the only AI business model that still works in 2026", problem:"얇은 AI 래퍼는 60–70%가 매출 제로. 도메인 데이터 보유 버티컬 AI($1.5K+/월)만 생존. 대시보드 전체 전제 검증.", up:"높음", date:"2026"},
+  {n:11, sub:"r/indiehackers", title:"I shipped a productivity SaaS in 30 days — what AI changed (and didn't)", problem:"AI가 코딩 60% 단축하지만, 디자인·디스트리뷰션·고객 인터뷰는 단축 안 됨. '5개 MVP 출시' 환상에 대한 현실 점검.", up:"높음", date:"2025"},
+  {n:12, sub:"r/indiehackers", title:"How I Made $10k MRR in 3 Months for My Last AI SaaS (Solo)", problem:"솔로 개발자 $10K MRR 플레이북. 한국어 웨지가 같은 규모에 도달 가능함을 검증.", up:"높음", date:"2025"},
+  {n:13, sub:"r/indiehackers", title:"Reddit Marketing Tool to $30K MRR — $0 spent on marketing", problem:"빌더 청중에게는 Reddit이 채널이지만, 한국 SMB는 Reddit에 없음 — 디스트리뷰션 플레이북 비전이.", up:"높음", date:"2025"}
+];
+
+const UNSOLVED_PROBLEMS = [
+  {n:1, name:"RAG가 프로덕션에서 환각을 자신만만하게 함", desc:"의미 청킹 54% vs 단순 재귀 청킹 69% (2026.02 벤치마크). 검색·인용 정확도가 0.95 신뢰도로 retracted 논문을 인용. Citation grounding 미해결.", subs:["r/LocalLLaMA","r/SaaS","r/microsaas"], hard:"도메인 fine-tune 또는 비싼 re-ranker 필요. 로컬 모델 중 Command R 35B만 내장 인용 grounding.", relevant:"#3 HWP RAG — 인용 정확도 자체가 해자"},
+  {n:2, name:"출력 토큰이 에이전트 단가를 죽임", desc:"Codex 요청당 15k 토큰 오버헤드, Claude Code 27k. 솔로 개발자가 $5–20/사용자/월 구독으로 지속 불가.", subs:["r/LocalLLaMA","r/ClaudeCode","r/AI_Agents"], hard:"프론티어 API는 여전히 토큰 단위 과금. 로컬 Qwen 35b가 도움 되지만 한국 SMB는 GPU 운영 불가.", relevant:"#2 보이스 — 분당 가격 셈을 달러가 아닌 원으로 맞춰야"},
+  {n:3, name:"AI 래퍼는 해자 없음 — 모델 프로바이더가 다음 분기에 출시", desc:"2026년까지 AI 스타트업 ~90% 실패 예측. r/SaaS 단골: 모든 래퍼 기능이 모델 프로바이더 로드맵에 있음. 자체 도메인 데이터+워크플로 통합만 생존.", subs:["r/SaaS","r/microsaas","r/indiehackers"], hard:"자소서 첨삭 코퍼스, HWP 판례 인덱스, 네이버 SEO 랭킹 데이터 — OpenAI에는 없음.", relevant:"5개 모두 — 언어+워크플로가 이중 해자"},
+  {n:4, name:"비영어 버티컬 워크플로를 만드는 사람이 없음", desc:"LATAM SMB 이커머스, 규제 산업, 비영어권이 도메인 접근이 만드는 wedge라고 합의. HWP 도구는 2025–2026에야 등장 (hwp-mcp).", subs:["r/microsaas","r/SaaS","r/LocalLLaMA"], hard:"미국·유럽 개발자는 언어·규제·디스트리뷰션 채널이 없음.", relevant:"본 대시보드 전제 자체 — 한국어 버티컬 AI를 사이드 기능이 아닌 유일 포지셔닝으로"},
+  {n:5, name:"디스트리뷰션이 제품을 이김 — 빌더는 빌드만 할 줄 앎", desc:"성공한 인디 해커의 72%가 디스트리뷰션이 결정적이라고 답함. 마케팅 = 시간의 60%. 솔로 개발자가 좋은 MVP 출시 후 10명 못 넘어가는 사례 반복.", subs:["r/SaaS","r/indiehackers","r/SideProject"], hard:"한국 B2B SMB는 Reddit/PH/Twitter에 없음. Naver 블로그, Disquiet, 카카오 오픈채팅, 다이렉트 세일즈 필요.", relevant:"#4 자소서가 가장 도달 쉬움(YouTube/Instagram). 나머지는 high-touch B2B 필드 세일즈"},
+  {n:6, name:"보이스 에이전트는 영어용 — 사투리·코드스위칭에서 실패", desc:"OpenAI Realtime API는 미국 영어 OK. 한국어 존댓말·사투리·한영 코드스위칭(병원 콜의 일상)에서 깨짐. Voiceflow는 보이스 워크플로 미지원.", subs:["r/Chatbots","r/LocalLLaMA","r/SaaS"], hard:"한국어 7단계 화법, 산업 전문용어, 영어 외래어 빈발. 미국 영어 학습 STT가 무너짐.", relevant:"#2 카카오 보이스 — 단, Korean STT 품질 검증 선행 필수"},
+  {n:7, name:"멀티스텝 에이전트의 사일런트 실패·메모리 손실", desc:"r/AI_Agents 2026.05 1000+ 댓글 스레드: 에이전트가 출력 없이 루프에서 토큰 소진. Claude Code가 세션마다 프로젝트 재학습 4분.", subs:["r/LocalLLaMA","r/AI_Agents","r/ClaudeCode"], hard:"트레이스·평가 도구가 미성숙(Langfuse, Helicone). ML-Ops 경험 없는 솔로 개발자에게 프로덕션 디버깅 잔혹.", relevant:"전 영역 — 멀티스텝 대신 단일 턴 분류/생성으로 시작"},
+  {n:8, name:"SMB 가격 저항: $20는 OK, $200은 불가능", desc:"기술 투자 익숙하지 않은 소상공인 타겟 시 가격 저항 빈번. 한국 SMB는 월 5–10만원이 일반적 SaaS 지출.", subs:["r/SaaS","r/EntrepreneurRideAlong","r/microsaas"], hard:"₩300K+/월 달성하려면 비기술 사장에게 정량 ROI 필요: '지난주 콜 47건 → 예약 12 → 매출 240만원'.", relevant:"전 영역 — ROI 대시보드를 1일차부터 빌드인"}
+];
+
+const IDEA_MAPPING = [
+  {rank:1, name:"네이버 SEO 콘텐츠 엔진", problems:["P3 래퍼 해자 없음","P5 디스트리뷰션"], note:"가장 wrapper-risk 큼. 네이버 랭킹 데이터 플라이휠 구축이 방어선. Naver 블로그·셀러 카페로 직접 디스트리뷰션."},
+  {rank:2, name:"카카오톡 SMB 보이스 에이전트", problems:["P6 한국어 보이스","P7 사일런트 실패","P8 SMB 가격"], note:"3개 페인 모두 적용. Korean STT 품질 검증 + ROI 대시보드 필수. 가장 높은 해자, 가장 높은 리스크."},
+  {rank:3, name:"HWP-Native 버티컬 RAG", problems:["P1 RAG 환각","P3 래퍼 해자","P4 비영어 버티컬"], note:"Reddit 검증 최강. hwp-mcp 등장(2025–2026)이 공간이 열리고 있음을 시사. Citation grounding이 핵심."},
+  {rank:4, name:"자소서/면접 AI 코치", problems:["P3 래퍼 해자","P5 디스트리뷰션(긍정)"], note:"디스트리뷰션 가장 쉬움 — B2C, YouTube/Instagram/대학 커뮤니티. r/SideProject 모의 면접 도구 바이럴이 수요 검증."},
+  {rank:5, name:"카카오톡 채널 자동응답 빌더", problems:["P7 사일런트 실패(약함)","P8 SMB 가격"], note:"단일 턴 분류 — 가장 낮은 빌드 난이도. 4주 출시 가능. 카카오 인증 노하우가 진입 장벽."}
+];
+
+// ============= TAB SWITCHING =============
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    const tab = btn.dataset.tab;
+    document.getElementById(tab).classList.add('active');
+    if (tab === 'catalog') setTimeout(renderCatalogChart, 50);
+    if (tab === 'clusters') setTimeout(renderClusterChart, 50);
+    if (tab === 'market') setTimeout(renderMarketCharts, 50);
+    if (tab === 'top5') setTimeout(renderIdeaMatrix, 50);
+    if (tab === 'reddit') setTimeout(renderReddit, 50);
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  });
+});
+
+// ============= CATALOG =============
+const categories = [...new Set(SERVICES.map(s => s.cat))];
+const activeFilters = new Set();
+const filterContainer = document.getElementById('categoryFilters');
+categories.forEach(cat => {
+  const chip = document.createElement('span');
+  chip.className = 'chip';
+  chip.textContent = cat;
+  chip.addEventListener('click', () => {
+    chip.classList.toggle('active');
+    if (activeFilters.has(cat)) activeFilters.delete(cat); else activeFilters.add(cat);
+    renderCatalog();
+  });
+  filterContainer.appendChild(chip);
+});
+document.getElementById('searchInput').addEventListener('input', renderCatalog);
+
+function renderCatalog() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const tbody = document.querySelector('#catalogTable tbody');
+  tbody.innerHTML = '';
+  SERVICES.filter(s => {
+    const matchQ = !q || s.name.toLowerCase().includes(q) || s.problem.toLowerCase().includes(q) || s.tag.toLowerCase().includes(q);
+    const matchC = activeFilters.size === 0 || activeFilters.has(s.cat);
+    return matchQ && matchC;
+  }).forEach(s => {
+    const tr = document.createElement('tr');
+    const tierLabel = s.tier === 'H' ? 'High' : s.tier === 'M' ? 'Mid' : 'Low';
+    tr.innerHTML = `
+      <td class="row-num">${String(s.n).padStart(2,'0')}</td>
+      <td><div class="name">${s.name}</div><div class="tagline">${s.tag}</div></td>
+      <td>${s.problem}</td>
+      <td><span class="pill">${s.cat}</span></td>
+      <td><span class="tier tier-${s.tier}">${tierLabel}</span></td>
+      <td style="color: var(--ink-500); font-size: 12.5px;">${s.tech}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+renderCatalog();
+
+// ============= CLUSTERS =============
+const clusterGrid = document.getElementById('clusterGrid');
+CLUSTERS.forEach(c => {
+  const div = document.createElement('div');
+  div.className = 'cluster';
+  div.innerHTML = `
+    <div class="c-num">${String(c.n).padStart(2,'0')}</div>
+    <h3>${c.name}</h3>
+    <div class="c-count">${c.count} services</div>
+    <p>${c.desc}</p>
+    <div class="examples">${c.examples.map(e => `<span>${e}</span>`).join('')}</div>
+  `;
+  clusterGrid.appendChild(div);
+});
+
+// ============= INCUMBENTS =============
+const incTable = document.getElementById('incumbentTable');
+INCUMBENTS.forEach(i => {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td><b style="color:var(--ink-900); font-family:var(--serif); font-size:15px;">${i.cat}</b></td><td style="color: var(--ink-500); font-size: 13px;">${i.players}</td><td style="font-size:13px;">${i.pos}</td><td style="color: var(--accent); font-size: 13px; font-weight: 500;">${i.gap}</td>`;
+  incTable.appendChild(tr);
+});
+
+// ============= IDEA CARDS =============
+const ideaContainer = document.getElementById('ideaCards');
+IDEAS.forEach((idea) => {
+  const card = document.createElement('article');
+  card.className = `idea`;
+  const diffDots = [1,2,3,4,5].map(d => `<div class="dot ${d <= idea.difficulty ? 'on' : ''}"></div>`).join('');
+  card.innerHTML = `
+    <div class="left-rail">
+      <div class="rank-num">${String(idea.rank).padStart(2,'0')}</div>
+      <div class="rank-label">Rank ${idea.rank} of 5</div>
+      <div class="diff-block">
+        <div class="lbl">Build Difficulty</div>
+        <div class="diff-bar">${diffDots}</div>
+      </div>
+    </div>
+    <div class="body">
+      <div class="cat">${idea.category}</div>
+      <h3>${idea.name} <span style="color: var(--ink-500); font-weight: 400; font-style: italic; font-size: 0.78em;">— ${idea.sub}</span></h3>
+      <p class="one-liner">"${idea.oneLiner}"</p>
+      <div class="meta-row">
+        <div class="meta-cell"><div class="k">시장</div><div class="v">${idea.market}</div></div>
+        <div class="meta-cell"><div class="k">가격대</div><div class="v">${idea.pricing}</div></div>
+        <div class="meta-cell"><div class="k">MVP 기간</div><div class="v">${idea.mvp}</div></div>
+      </div>
+      <div class="idea-section"><h4>경쟁 / 차별화</h4><ul><li><b>경쟁:</b> ${idea.competition}</li><li><b>차별화:</b> ${idea.differentiation}</li></ul></div>
+      <div class="idea-section"><h4>핵심 워크플로</h4><ul>${idea.workflow.map(w => `<li>${w}</li>`).join('')}</ul></div>
+      <div class="idea-section"><h4>기술 스택</h4><div class="tech-tags">${idea.tech.map(t => `<span>${t}</span>`).join('')}</div></div>
+      <div class="idea-section"><h4>해자 · Moat</h4><ul><li>${idea.moat}</li></ul></div>
+      <div class="idea-section"><h4>주요 리스크</h4><ul><li>${idea.risk}</li></ul></div>
+    </div>
+  `;
+  ideaContainer.appendChild(card);
+});
+
+// ============= CHARTS =============
+Chart.defaults.color = '#708090';
+Chart.defaults.borderColor = '#eef0f3';
+Chart.defaults.font.family = "'Pretendard Variable', 'Pretendard', system-ui, sans-serif";
+Chart.defaults.font.size = 12;
+
+const CHART_PALETTE = ['#36454f', '#708090', '#9aa4b1', '#b8523c', '#c8ccd4', '#a7c4b5', '#5a6b78', '#b58419'];
+
+let catalogChartInstance, clusterChartInstance, globalChartInstance, cagrChartInstance, koreaChartInstance, ideaMatrixInstance;
+
+function renderCatalogChart() {
+  if (catalogChartInstance) return;
+  const counts = {};
+  SERVICES.forEach(s => { counts[s.cat] = (counts[s.cat] || 0) + 1; });
+  const labels = Object.keys(counts).sort((a,b) => counts[b] - counts[a]);
+  const data = labels.map(l => counts[l]);
+  catalogChartInstance = new Chart(document.getElementById('catalogChart').getContext('2d'), {
+    type: 'bar',
+    data: { labels, datasets: [{ label: '서비스 수', data, backgroundColor: '#36454f', borderWidth: 0, borderRadius: 0, barPercentage: 0.7 }] },
+    options: {
+      responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+      plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1a1f2a', padding: 10, cornerRadius: 0 } },
+      scales: {
+        x: { grid: { color: '#eef0f3' }, ticks: { color: '#708090', font: { family: "'JetBrains Mono', monospace", size: 11 } }, border: { display: false } },
+        y: { grid: { display: false }, ticks: { color: '#36454f', font: { weight: 500 } }, border: { color: '#1a1f2a' } }
+      }
+    }
+  });
+}
+
+function renderClusterChart() {
+  if (clusterChartInstance) return;
+  clusterChartInstance = new Chart(document.getElementById('clusterChart').getContext('2d'), {
+    type: 'doughnut',
+    data: { labels: CLUSTERS.map(c => c.name), datasets: [{ data: CLUSTERS.map(c => c.count), backgroundColor: CHART_PALETTE, borderColor: '#fafafa', borderWidth: 2 }] },
+    options: {
+      responsive: true, maintainAspectRatio: false, cutout: '60%',
+      plugins: {
+        legend: { position: 'right', labels: { padding: 14, boxWidth: 10, boxHeight: 10, font: { size: 12 }, color: '#36454f' } },
+        tooltip: { backgroundColor: '#1a1f2a', padding: 10, cornerRadius: 0 }
+      }
+    }
+  });
+}
+
+function renderMarketCharts() {
+  if (globalChartInstance && cagrChartInstance && koreaChartInstance) return;
+  const tt = { backgroundColor: '#1a1f2a', padding: 10, cornerRadius: 0 };
+
+  globalChartInstance = new Chart(document.getElementById('globalMarketChart').getContext('2d'), {
+    type: 'bar',
+    data: { labels: GLOBAL_MARKET.map(m => m.cat), datasets: [{ label: 'USD B', data: GLOBAL_MARKET.map(m => m.size), backgroundColor: '#36454f', borderRadius: 0, barPercentage: 0.7 }] },
+    options: {
+      responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+      plugins: { legend: { display: false }, tooltip: { ...tt, callbacks: { label: c => '$' + c.parsed.x + 'B' } } },
+      scales: {
+        x: { ticks: { callback: v => '$' + v + 'B', color: '#708090', font: { family: "'JetBrains Mono', monospace", size: 11 } }, grid: { color: '#eef0f3' }, border: { display: false } },
+        y: { grid: { display: false }, ticks: { color: '#36454f' }, border: { color: '#1a1f2a' } }
+      }
+    }
+  });
+
+  cagrChartInstance = new Chart(document.getElementById('cagrChart').getContext('2d'), {
+    type: 'bar',
+    data: { labels: GLOBAL_MARKET.map(m => m.cat), datasets: [{ label: 'CAGR %', data: GLOBAL_MARKET.map(m => m.cagr), backgroundColor: '#b8523c', borderRadius: 0, barPercentage: 0.7 }] },
+    options: {
+      responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+      plugins: { legend: { display: false }, tooltip: { ...tt, callbacks: { label: c => c.parsed.x + '%' } } },
+      scales: {
+        x: { ticks: { callback: v => v + '%', color: '#708090', font: { family: "'JetBrains Mono', monospace", size: 11 } }, grid: { color: '#eef0f3' }, border: { display: false } },
+        y: { grid: { display: false }, ticks: { color: '#36454f' }, border: { color: '#1a1f2a' } }
+      }
+    }
+  });
+
+  koreaChartInstance = new Chart(document.getElementById('koreaMarketChart').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: KOREA_DATA.map(d => d.cat),
+      datasets: [
+        { label: '글로벌 (USD B)', data: KOREA_DATA.map(d => d.global), backgroundColor: '#36454f', borderRadius: 0, barPercentage: 0.6, categoryPercentage: 0.85 },
+        { label: '한국·추정 (USD B)', data: KOREA_DATA.map(d => d.korea), backgroundColor: '#b8523c', borderRadius: 0, barPercentage: 0.6, categoryPercentage: 0.85 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'top', align: 'end', labels: { padding: 16, boxWidth: 14, boxHeight: 10, font: { size: 12 }, color: '#36454f' } },
+        tooltip: { ...tt, callbacks: { afterBody: ctx => '\n' + KOREA_DATA[ctx[0].dataIndex].note } }
+      },
+      scales: {
+        y: { ticks: { callback: v => '$' + v + 'B', color: '#708090', font: { family: "'JetBrains Mono', monospace", size: 11 } }, grid: { color: '#eef0f3' }, border: { display: false } },
+        x: { grid: { display: false }, ticks: { maxRotation: 45, minRotation: 30, color: '#36454f', font: { size: 11 } }, border: { color: '#1a1f2a' } }
+      }
+    }
+  });
+}
+
+function renderIdeaMatrix() {
+  if (ideaMatrixInstance) return;
+  const axes = ['빌드 용이도', '한국 시장 갭', '결제 의향', '차별화', '한국 정합성'];
+  const scores = [[4,5,4,5,5],[3,5,5,4,5],[2,4,5,5,5],[5,3,3,4,4],[4,4,3,4,5]];
+  const lineColors = ['#1a1f2a', '#b8523c', '#708090', '#b58419', '#4a6b5d'];
+  const fillColors = ['rgba(26,31,42,0.08)', 'rgba(184,82,60,0.10)', 'rgba(112,128,144,0.10)', 'rgba(181,132,25,0.10)', 'rgba(74,107,93,0.10)'];
+  ideaMatrixInstance = new Chart(document.getElementById('ideaMatrixChart').getContext('2d'), {
+    type: 'radar',
+    data: {
+      labels: axes,
+      datasets: IDEAS.map((idea, i) => ({
+        label: '#' + idea.rank + ' ' + idea.name,
+        data: scores[i],
+        backgroundColor: fillColors[i],
+        borderColor: lineColors[i],
+        borderWidth: 2,
+        pointBackgroundColor: lineColors[i],
+        pointRadius: 4,
+        pointHoverRadius: 6
+      }))
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { padding: 12, boxWidth: 14, boxHeight: 4, font: { size: 11 }, color: '#36454f' } },
+        tooltip: { backgroundColor: '#1a1f2a', padding: 10, cornerRadius: 0 }
+      },
+      scales: {
+        r: {
+          beginAtZero: true, max: 5,
+          ticks: { stepSize: 1, color: '#708090', backdropColor: 'transparent', font: { family: "'JetBrains Mono', monospace", size: 10 } },
+          grid: { color: '#e3e6eb' },
+          angleLines: { color: '#e3e6eb' },
+          pointLabels: { color: '#1a1f2a', font: { size: 12, weight: '600', family: "'Pretendard Variable', sans-serif" } }
+        }
+      }
+    }
+  });
+}
+
+function renderReddit() {
+  // Communities grid (reuse cluster style)
+  const grid = document.getElementById('redditGrid');
+  if (grid.children.length > 0) return; // idempotent
+  REDDIT_COMMUNITIES.forEach(r => {
+    const div = document.createElement('div');
+    div.className = 'cluster';
+    div.innerHTML = `
+      <div class="c-num">${String(r.n).padStart(2,'0')}</div>
+      <h3>${r.name}</h3>
+      <div class="c-count">${r.subs} subscribers</div>
+      <p>${r.relevance}</p>
+      <p style="font-size: 12px; color: var(--ink-700); font-style: italic; border-top: 1px dashed var(--ink-100); padding-top: 12px; margin-top: 12px;">전형적 콘텐츠 — ${r.typical}</p>
+      <div class="examples" style="border-top: none; padding-top: 8px;">
+        ${r.map.map(m => `<span style="background: var(--accent-soft); color: var(--accent); border-color: var(--accent-soft);">${m}</span>`).join('')}
+      </div>
+    `;
+    grid.appendChild(div);
+  });
+
+  // Posts table
+  const postsBody = document.getElementById('redditPostsTable');
+  REDDIT_POSTS.forEach(p => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="row-num">${String(p.n).padStart(2,'0')}</td>
+      <td><span class="pill" style="background: var(--accent-soft); color: var(--accent); border-color: var(--accent-soft);">${p.sub}</span></td>
+      <td><div class="name" style="font-size: 14px;">${p.title}</div><div style="color: var(--ink-500); font-size: 11px; font-family: var(--mono); margin-top: 4px;">${p.date}</div></td>
+      <td style="font-size: 13px;">${p.problem}</td>
+      <td><span class="tier tier-H">▲ ${p.up}</span></td>
+    `;
+    postsBody.appendChild(tr);
+  });
+
+  // Problems list
+  const problemsList = document.getElementById('problemsList');
+  UNSOLVED_PROBLEMS.forEach(p => {
+    const div = document.createElement('div');
+    div.className = 'pillar';
+    div.style.marginBottom = '12px';
+    div.style.borderLeftColor = p.n <= 3 ? 'var(--accent)' : (p.n <= 6 ? 'var(--warn)' : 'var(--ink-700)');
+    div.innerHTML = `
+      <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 8px;">
+        <span style="font-family: var(--serif); font-style: italic; font-size: 22px; color: var(--accent); line-height: 1;">${String(p.n).padStart(2,'0')}</span>
+        <h4 style="margin: 0; font-size: 17px; color: var(--ink-900); font-weight: 600; flex: 1;">${p.name}</h4>
+      </div>
+      <p style="color: var(--ink-700); font-size: 14px; margin-bottom: 12px; line-height: 1.65;">${p.desc}</p>
+      <div style="display: grid; grid-template-columns: auto 1fr; gap: 12px 14px; font-size: 12.5px; line-height: 1.55; border-top: 1px solid var(--ink-100); padding-top: 12px;">
+        <span style="font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink-500); padding-top: 2px;">WHY HARD</span>
+        <span style="color: var(--ink-700);">${p.hard}</span>
+        <span style="font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink-500); padding-top: 2px;">매핑</span>
+        <span style="color: var(--accent); font-weight: 500;">${p.relevant}</span>
+        <span style="font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink-500); padding-top: 2px;">SUBS</span>
+        <span style="font-family: var(--mono); font-size: 11px; color: var(--ink-700);">${p.subs.join(' · ')}</span>
+      </div>
+    `;
+    problemsList.appendChild(div);
+  });
+
+  // Mapping table
+  const mapBody = document.getElementById('mappingTable');
+  IDEA_MAPPING.forEach(m => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="row-num">${String(m.rank).padStart(2,'0')}</td>
+      <td><div class="name">${m.name}</div></td>
+      <td>${m.problems.map(p => `<span class="pill" style="background: var(--accent-soft); color: var(--accent); border-color: var(--accent-soft); margin-right: 4px; margin-bottom: 4px;">${p}</span>`).join('')}</td>
+      <td style="font-size: 13px; color: var(--ink-700);">${m.note}</td>
+    `;
+    mapBody.appendChild(tr);
+  });
+}
+</script>
+</body>
+</html>
